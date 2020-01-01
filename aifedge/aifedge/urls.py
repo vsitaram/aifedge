@@ -15,8 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from django.conf.urls import url
+from django.views.generic.base import RedirectView
+
 
 urlpatterns = [
+	path('', RedirectView.as_view(url='/edge/')),
     path('edge/', include('edge.urls')),
     path('admin/', admin.site.urls),
+
+    url(r'^.*', RedirectView.as_view(url='/')),
 ]

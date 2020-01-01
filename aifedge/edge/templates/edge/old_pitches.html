@@ -1,9 +1,0 @@
-{% if pitch_list %}
-    <ul>
-    {% for pitch in pitch_list %}
-        <li><a href="{% url 'edge:pitch' pitch.id %}">{{ pitch.title }}</a></li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No pitches are available.</p>
-{% endif %}
