@@ -37,7 +37,7 @@
             <div class="container">
 
                 <!-- Brand -->
-                <a class="navbar-brand waves-effect my-0" href="dashboard.html" target="_blank">
+                <a class="navbar-brand waves-effect my-0" href="{% url 'edge:dashboard' %}">
                     <img src="{% static 'edge/img/AIF_logo_white.png' %}" class="image-fluid" style="width: 96px; margin-top: -16px; margin-bottom: -16px;">
                 </a>
 
@@ -65,9 +65,15 @@
                         <li class="nav-item">
                             <a class="nav-link waves-effect" href="{% url 'edge:pitches' %}">Pitches</a>
                         </li>
-                        <li class="nav-item btn-info rounded mb-3">
-                            <a class="nav-link waves-effect" href="./login.html">Login</a>
-                        </li> 
+                        {% if user.is_authenticated %}
+                            <li class="nav-item btn-info rounded mb-3">
+                                <a class="nav-link waves-effect" href="{% url 'edge:logout' %}">Logout</a>
+                            </li>
+                        {% else %}
+                          <li class="nav-item btn-info rounded mb-3">
+                                <a class="nav-link waves-effect" href="{% url 'edge:login' %}">Login</a>
+                            </li>
+                        {% endif %} 
 
                     </ul>
 

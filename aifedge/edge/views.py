@@ -1,4 +1,6 @@
 from django.shortcuts import get_object_or_404, render
+from django.contrib.auth.decorators import login_required
+
 
 from .models import Pitch, Member
 
@@ -14,6 +16,7 @@ def dashboard(request):
 	}
 	return render(request, template_name, context)
 
+@login_required
 def pitches(request):
     template_name = 'edge/pitches.html'
     pitch_list = Pitch.objects.all()
@@ -22,7 +25,7 @@ def pitches(request):
     }
     return render(request, template_name, context)
 
-
+@login_required
 def pitch(request, pitch_id):
     template_name = 'edge/pitch.html'
     pitch = get_object_or_404(Pitch, pk=pitch_id)
@@ -30,4 +33,8 @@ def pitch(request, pitch_id):
     	'pitch' : pitch
     }
     return render(request, template_name, context)
+
+def login(request):
+	template_name = 'edge/login.html'
+	return render(request, template_name)
 

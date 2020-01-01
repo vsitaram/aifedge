@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>AIFEdge - Login</title>
+
+    {% load static %}
+
+    <link rel="icon" href="{% static 'edge/img/AIF_logo_white.png' %}">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="{% static 'edge/css/bootstrap.min.css' %}">
+    <!-- Material Design Bootstrap -->
+    <link rel="stylesheet" href="{% static 'edge/css/mdb.min.css' %}">
+    <!-- MDBootstrap Datatables  -->
+    <link rel="stylesheet" href="{% static 'edge/css/addons/datatables.min.css' %}">
+    <!-- Your custom styles (optional) -->
+    <link rel="stylesheet" href="{% static 'edge/css/style.min.css' %}">
+</head>
+<body>
+
+  <!-- Start your project here-->  
+  <div style="height: 100vh;" class="elegant-color-dark">
+    <div class="flex-center flex-column animated fadeIn">
+
+      <form method="post">
+          {% csrf_token %}
+
+          <img src="{% static 'edge/img/AIF_logo_white.png' %}" class="mb-4 img-fluid" alt="Responsive image" style="width: 400px">
+
+          <input type="text" id="defaultLoginFormEmail" class="form-control mb-4" placeholder="Username" name="username">
+
+          <input type="password" id="defaultLoginFormPassword" class="form-control mb-4" placeholder="Password" name="password">
+
+
+          <button class="btn btn-info btn-block my-4" type="submit">Sign in</button>
+      </form>
+    </div>
+  </div>
+  <!-- End your project here-->
+
+  <!-- SCRIPTS -->
+  <!-- JQuery -->
+  <script type="text/javascript" src="{% static 'edge/js/jquery-3.4.1.min.js' %}"></script>
+  <!-- Bootstrap tooltips -->
+  <script type="text/javascript" src="{% static 'edge/js/popper.min.js' %}"></script>
+  <!-- Bootstrap core JavaScript -->
+  <script type="text/javascript" src="{% static 'edge/js/bootstrap.min.js' %}"></script>
+  <!-- MDB core JavaScript -->
+  <script type="text/javascript" src="{% static 'edge/js/mdb.min.js' %}"></script>
+  <!-- Your custom scripts (optional) -->
+  <script type="text/javascript"></script>
+
+</body>
+</html>
