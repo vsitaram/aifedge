@@ -6,13 +6,13 @@ class Member(models.Model):
     grad_year = models.PositiveIntegerField()
 
     def __str__(self):
-        return self.first_name + " " + self.last_name
+        return self.first_name + " " + self.last_name + " (" + str(self.grad_year) + ")"
 
 class Pitch(models.Model):
     title = models.CharField(max_length=200)
-    stock_exchange_abbreviation = models.CharField(max_length=30, default="NYSE")
+    stock_exchange_abbreviation = models.CharField('Stock Exchange Abbreviation', max_length=30, default="NYSE")
     stock_ticker = models.CharField(max_length=30, default="AAPL")
-    pitch_date = models.DateField("date pitched")
+    pitch_date = models.DateField("Date Pitched")
     pitchers = models.ManyToManyField(Member)
     vote_count_for = models.PositiveIntegerField(default=0)
     vote_count_against = models.PositiveIntegerField(default=0)
@@ -33,3 +33,20 @@ class Pitch(models.Model):
 
     def __str__(self):
         return self.title
+
+class Document(models.Model):
+    pitch = models.ForeignKey(Pitch, on_delete=models.CASCADE, default=None)
+    uploaded_at = models.DateTimeField(auto_now_add=True, blank=True)
+    upload = models.FileField(default=None)
+
+
+# class Question(models.Model):
+#     question_text = models.CharField(max_length=200)
+#     pub_date = models.DateTimeField('date published')
+
+
+# class Choice(models.Model):
+#     question = models.ForeignKey(Question, on_delete=models.CASCADE)
+#     choice_text = models.CharField(max_length=200)
+#     votes = models.IntegerField(default=0)
+    

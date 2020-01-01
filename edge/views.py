@@ -1,8 +1,14 @@
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.decorators import login_required
 
+from django.views.generic.edit import CreateView
+from django.urls import reverse_lazy
 
-from .models import Pitch, Member
+from django.conf import settings
+# from .models import Upload
+
+
+from .models import Pitch, Member, Document
 
 
 def dashboard(request):
@@ -37,4 +43,3 @@ def pitch(request, pitch_id):
 def login(request):
 	template_name = 'edge/login.html'
 	return render(request, template_name)
-

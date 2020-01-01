@@ -31,13 +31,15 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'edge.apps.EdgeConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'edge',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -114,6 +116,18 @@ USE_L10N = True
 
 USE_TZ = True
 
+
+AWS_ACCESS_KEY_ID = 'AKIAZDMATQMHI66U4TMR'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'aifedge'
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_DEFAULT_ACL = None
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+
+AWS_PUBLIC_MEDIA_LOCATION = 'files'
+DEFAULT_FILE_STORAGE = 'aifedge.storage_backends.PublicMediaStorage'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
