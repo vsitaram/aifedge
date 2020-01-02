@@ -9,6 +9,16 @@ verify_ssl = true
 django = "*"
 boto3 = "*"
 django-storages = "*"
+pandas = "*"
+requests = "*"
+pandas-datareader = "*"
+numpy = "*"
+scipy = "*"
+sklearn = "*"
+statsmodels = "*"
+setuptools = "*"
+python-decouple = "*"
+yfinance = "*"
 
 [requires]
 python_version = "3.6"
