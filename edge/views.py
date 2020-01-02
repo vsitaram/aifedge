@@ -35,8 +35,10 @@ def pitches(request):
 def pitch(request, pitch_id):
     template_name = 'edge/pitch.html'
     pitch = get_object_or_404(Pitch, pk=pitch_id)
+    documents = pitch.document_set.all()
     context = {
-    	'pitch' : pitch
+    	'pitch' : pitch,
+        'documents': documents
     }
     return render(request, template_name, context)
 

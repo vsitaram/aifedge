@@ -39,6 +39,9 @@ class Document(models.Model):
     uploaded_at = models.DateTimeField(auto_now_add=True, blank=True)
     upload = models.FileField(default=None)
 
+    def __str__(self):
+        return self.upload.name
+
 
 # class Question(models.Model):
 #     question_text = models.CharField(max_length=200)

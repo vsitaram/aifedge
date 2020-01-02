@@ -465,6 +465,31 @@
             </section>
             <!--Section: Cards-->
 
+            <!-- Section: Relevant Documents -->
+            <section>
+              <table id="dtBasicExample" class="table table-striped table-bordered text-white elegant-color" cellspacing="0" width="100%">
+                <thead>
+                  <tr>
+                    <th class="th-sm">Title</th>
+                    <th class="th-sm">Date Uploaded</th>
+                    <th class="th-sm">File Size</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for document in documents %}
+                    <tr onclick="window.location='{{ document.upload.url }}'">
+                      <td>{{ document.upload.name }}</td>
+                      <td>{{ document.uploaded_at }}</td>
+                      <td>{{ document.upload.size|filesizeformat }}</td>
+                    </tr>
+                  {% empty %}
+                      <td>No pitches are available.</td>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </section>
+
+
         </div>
     </main>
     <!--Main layout-->
