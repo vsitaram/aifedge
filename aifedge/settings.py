@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from decouple import config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,10 +21,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '7*x9a%&(2(6qk(mydqx4i62y*e!qu@t1*h2kuvv5zu6&pi0%t9'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = []
 
@@ -117,16 +118,16 @@ USE_L10N = True
 USE_TZ = True
 
 
-AWS_ACCESS_KEY_ID = 'AKIAZDMATQMHI66U4TMR'
-AWS_SECRET_ACCESS_KEY = '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'
-AWS_STORAGE_BUCKET_NAME = 'aifedge'
+AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 AWS_DEFAULT_ACL = None
 AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=86400',
 }
 
-AWS_PUBLIC_MEDIA_LOCATION = 'files'
+AWS_PUBLIC_MEDIA_LOCATION = config('AWS_PUBLIC_MEDIA_LOCATION')
 DEFAULT_FILE_STORAGE = 'aifedge.storage_backends.PublicMediaStorage'
 
 # Static files (CSS, JavaScript, Images)
