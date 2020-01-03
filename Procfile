@@ -1,0 +1,1 @@
+web: gunicorn aifedge.wsgi --log-file -
