@@ -22,8 +22,8 @@ yfinance = "*"
 dj-database-url = "*"
 gunicorn = "*"
 whitenoise = "*"
-django-heroku = "*"
 psycopg2 = "*"
+django-heroku = "*"
 
 [requires]
 python_version = "3.6"

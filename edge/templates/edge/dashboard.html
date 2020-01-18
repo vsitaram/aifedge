@@ -20,6 +20,14 @@
     <link rel="stylesheet" href="{% static 'edge/css/addons/datatables.min.css' %}">
     <!-- Your custom styles (optional) -->
     <link rel="stylesheet" href="{% static 'edge/css/style.min.css' %}">
+
+    <style type="text/css">
+        @media (min-width: 576px) {
+            #porfolio-performance {
+                height: 70vh;
+            }
+        }
+    </style>
 </head>
 
 <body class="elegant-color-dark">
@@ -90,7 +98,7 @@
                 <div class="row text-white">
 
                   <!--Grid column-->
-                  <div class="col-md-9 mb-4">
+                  <div class="col-md mb-4">
 
                     <!--Card-->
                     <div class="card elegant-color">
@@ -110,52 +118,63 @@
                   </div>
                   <!--Grid column-->
 
-                  <!--Grid column-->
-                  <div class="col-md-3 mb-4">
-
-                    <!--Card-->
-                    <div class="card mb-4">
-
-                      <!--Card content-->
-                      <div class="card-body elegant-color">
-
-                        <!-- List group links -->
-                        <div class="list-group list-group-flush">
-                          <a class="list-group-item list-group-item-action waves-effect elegant-color">Sales
-                            <span class="badge badge-success badge-pill pull-right">22%
-                              <i class="fas fa-arrow-up ml-1"></i>
-                            </span>
-                          </a>
-                          <a class="list-group-item list-group-item-action waves-effect elegant-color">Traffic
-                            <span class="badge badge-danger badge-pill pull-right">5%
-                              <i class="fas fa-arrow-down ml-1"></i>
-                            </span>
-                          </a>
-                          <a class="list-group-item list-group-item-action waves-effect elegant-color">Orders
-                            <span class="badge badge-primary badge-pill pull-right">14</span>
-                          </a>
-                          <a class="list-group-item list-group-item-action waves-effect elegant-color">Issues
-                            <span class="badge badge-primary badge-pill pull-right">123</span>
-                          </a>
-                          <a class="list-group-item list-group-item-action waves-effect elegant-color">Messages
-                            <span class="badge badge-primary badge-pill pull-right">8</span>
-                          </a>
-                        </div>
-                        <!-- List group links -->
-
-                      </div>
-
-                    </div>
-                    <!--/.Card-->
-
-                  </div>
-                  <!--Grid column-->
-
                 </div>
                 <!--Grid row-->
                 
             </section>
             
+
+            <hr class="my-5 stylish-color-dark">
+
+            <!--Section: Financial Metrics-->
+            <section>
+                <!--Grid row-->
+                <div class="row mb-4 wow fadeIn text-center">
+                    <!--Grid column-->
+                    <div class="col-md-4 mb-4 d-flex justify-content-center">
+                        <div class="text-center text-white rounded-circle border border-info d-flex justify-content-center" style="border: 10px solid #33b5e5!important;">
+                            <table style="height: 150px; width: 150px;">
+                                <td class="align-middle">
+                                    <div>
+                                        <h3 class="my-0">24.1%</h3>
+                                        <p class="my-0">YTD</p>
+                                    </div>
+                                </td>
+                            </table>
+                        </div>
+                        
+                        
+                        <!-- <img class="rounded-circle mb-2" alt="100x100" src="https://placehold.it/100x100" data-holder-rendered="true"> -->
+                    </div>
+                    <!--Grid column-->
+                    <div class="col-md-4 mb-4 d-flex justify-content-center">
+                        <div class="text-center text-white rounded-circle border border-info d-flex justify-content-center" style="border: 10px solid #33b5e5!important;">
+                            <table style="height: 150px; width: 150px;">
+                                <td class="align-middle">
+                                    <div>
+                                        <h3 class="my-0">21.1%</h3>
+                                        <p class="my-0">Total Return</p>
+                                    </div>
+                                </td>
+                            </table>
+                        </div>
+                    </div>
+                    <!--Grid column-->
+                    <div class="col-md-4 mb-4 d-flex justify-content-center">
+                        <div class="text-center text-white rounded-circle border border-info d-flex justify-content-center" style="border: 10px solid #33b5e5!important;">
+                            <table style="height: 150px; width: 150px;">
+                                <td class="align-middle">
+                                    <div>
+                                        <h3 class="my-0">18.4%</h3>
+                                        <p class="my-0">1-year Risk-Adjusted Return</p>
+                                    </div>
+                                </td>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
 
             <hr class="my-5 stylish-color-dark">
 
@@ -293,6 +312,12 @@
     <!-- SCRIPTS -->
     <!-- JQuery -->
     <script type="text/javascript" src="{% static 'edge/js/jquery-3.4.1.min.js' %}"></script>
+    <script type="text/javascript">
+        // if( $(window).width() < 768) {
+        //     alert($(window).width());
+        //     $("#myChart").setAttribute(height, 400);
+        // } 
+    </script>
     <!-- Bootstrap tooltips -->
     <script type="text/javascript" src="{% static 'edge/js/popper.min.js' %}"></script>
     <!-- Bootstrap core JavaScript -->
@@ -304,42 +329,53 @@
         // Animations initialization
         new WOW().init();
         var ctx = document.getElementById("myChart").getContext('2d');
+        if( $(window).width() < 768) {
+            // alert($(window).width());
+            var chart = document.getElementById("myChart");
+            chart.setAttribute("height", 300);
+        } 
         var myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-        datasets: [{
-        label: '# of Votes',
-        data: [12, 19, 3, 5, 2, 3],
-        backgroundColor: [
-        'rgba(255, 99, 132, 0.2)',
-        'rgba(54, 162, 235, 0.2)',
-        'rgba(255, 206, 86, 0.2)',
-        'rgba(75, 192, 192, 0.2)',
-        'rgba(153, 102, 255, 0.2)',
-        'rgba(255, 159, 64, 0.2)'
-        ],
-        borderColor: [
-        'rgba(255,99,132,1)',
-        'rgba(54, 162, 235, 1)',
-        'rgba(255, 206, 86, 1)',
-        'rgba(75, 192, 192, 1)',
-        'rgba(153, 102, 255, 1)',
-        'rgba(255, 159, 64, 1)'
-        ],
-        borderWidth: 1
-        }]
-        },
-        options: {
-        scales: {
-        yAxes: [{
-        ticks: {
-        beginAtZero: true
-        }
-        }]
-        }
-        }
+            type: 'line',
+            data: {
+                labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+                datasets: [{
+                    label: '# of Votes',
+                    data: [12, 19, 3, 5, 2, 3],
+                    backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                    'rgba(255,99,132,1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+                },
+                options: {
+                scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+                }
+            }
         });
+
+        // alert($(window).width());
+        // if( $(window).width() < 768) {
+        //     alert($(window).width());
+        //     $("#portfolio-performance").setAttribute(height, 400);
+        // } 
     </script>
 </body>
 

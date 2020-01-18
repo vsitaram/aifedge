@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="{% static 'edge/css/mdb.min.css' %}">
     <!-- MDBootstrap Datatables  -->
     <link rel="stylesheet" href="{% static 'edge/css/addons/datatables.min.css' %}">
+    <link rel="stylesheet" href="{% static 'edge/css/timeline.css' %}">
     <!-- Your custom styles (optional) -->
     <link rel="stylesheet" href="{% static 'edge/css/style.min.css' %}">
     <style type="text/css">
@@ -166,7 +167,7 @@
 
             <hr class="my-5 stylish-color-dark">
 
-            <!--Section: Financial Metrix-->
+            <!--Section: Financial Metrics-->
             <section>
                 <!--Grid row-->
                 <div class="row mb-4 wow fadeIn text-center">
@@ -176,7 +177,7 @@
                             <table style="height: 150px; width: 150px;">
                                 <td class="align-middle">
                                     <div>
-                                        <h3 class="my-0">24.1%</h3>
+                                        <h3 class="my-0">{{ year_to_date_return }}</h3>
                                         <p class="my-0">YTD</p>
                                     </div>
                                 </td>
@@ -192,7 +193,7 @@
                             <table style="height: 150px; width: 150px;">
                                 <td class="align-middle">
                                     <div>
-                                        <h3 class="my-0">21.1%</h3>
+                                        <h3 class="my-0">{{ security_total_return }}</h3>
                                         <p class="my-0">Total Return</p>
                                     </div>
                                 </td>
@@ -205,7 +206,7 @@
                             <table style="height: 150px; width: 150px;">
                                 <td class="align-middle">
                                     <div>
-                                        <h3 class="my-0">18.4%</h3>
+                                        <h3 class="my-0">{{ one_year_risk_adjusted_return }}</h3>
                                         <p class="my-0">1-year Risk-Adjusted Return</p>
                                     </div>
                                 </td>
@@ -229,9 +230,10 @@
                     <div class="col">
 
                         <h3 class="text-left text-white mb-5 ml-4">Investment Timeline</h3>
+
                         <!-- Timeline light-->
 
-                        <div class="timeline-main">
+                         <div class="timeline-main"> 
 
                           <ul class="timeline-light">
                             <li class="timeline-light-item timeline-light-item-info" >
@@ -242,7 +244,9 @@
                               </div>
                             </li>
 
-                            <li class="timeline-light-item timeline-light-item-dashed timeline-light-item-info">
+                            <li class="timeline-light-item 
+                            timeline-light-item-dashed
+                            timeline-light-item-info">
                               <div class="timeline-light-item-tail"></div>
                               <div class="timeline-light-item-head"></div>
                               <div class="timeline-light-item-content">
@@ -253,11 +257,13 @@
                             <li class="timeline-light-item  timeline-light-item-loading">
                               <div class="timeline-light-item-tail"></div>
                               <div class="timeline-light-item-head"></div>
+                              <div class="timeline-light-item-content">
                               {% if not pitch.currently_invested %}
-                                <div class="timeline-light-item-content">
+                                
                                   {{ pitch.title }} exited on {{ pitch.exit_date }} with price {{ pitch.exit_price }} 
-                                </div>
                               {% endif %}
+
+                              </div>
                             </li>
                           </ul>
 

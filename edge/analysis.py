@@ -8,6 +8,7 @@ import yfinance as yf
 import datetime as datetime
 import calendar
 from dateutil.relativedelta import relativedelta
+from dateutil import parser
 from sklearn import linear_model
 import statsmodels.api as sm
 yf.pdr_override() # <== that's all it takes :-)
@@ -35,7 +36,48 @@ def year_to_date_return(securities, weights):
 	w = weights * get_daily_returns_df(allSecuritiesAllData)
 	if(isinstance(w, pd.DataFrame)):
 		w = w.sum(axis = 1, skipna = True)
-	print(w[0])
+	# print(w[0])
+	ret = w[0]
+	return '{:.1%}'.format(ret)
+
+def security_total_return(securities, entry_price, entry_date, exit_price, exit_date):
+	if (entry_price is None) or (exit_price is None):
+		if entry_price is None:
+			startDate = parser.parse(entry_date)
+			startEndDate = startDate + datetime.timedelta(days=1)
+			beg = pdr.get_data_yahoo(securities, start=startDate.strftime('%Y-%m-%d'), end=startEndDate.strftime('%Y-%m-%d'),  as_panel = False, auto_adjust=False)
+			entry_price = beg['Adj Close'][0]
+
+		if exit_price is None:
+			endDate = startDate = parser.parse(exit_date)
+			endEndDate = endDate + datetime.timedelta(days=1)
+			end = pdr.get_data_yahoo(securities, start=endDate.strftime('%Y-%m-%d'), end=endEndDate.strftime('%Y-%m-%d'),  as_panel = False, auto_adjust=False)
+			exit_price = end['Adj Close'][0]
+	print(entry_price)
+	print(exit_price)
+	print(exit_price/entry_price - 1)
+	ret = (exit_price/entry_price - 1)
+	return '{:.1%}'.format(ret)
+	# allSecuritiesAllData = pdr.get_data_yahoo(securities, start=dateStart.strftime('%Y-%m-%d'), end=dateEnd.strftime('%Y-%m-%d'),  as_panel = False)
+	
+
+def portfolio_total_return(securities, weights, startDate, endDate):
+	startDate = datetime.datetime.today()
+	startEndDate = startDate + datetime.timedelta(days=1)
+	endDate = datetime.datetime(startDate.year - 1, 12, 31)
+	while(endDate.weekday() > 4):
+		endDate = endDate - datetime.timedelta(days=1)
+	endEndDate = endDate + datetime.timedelta(days=1)
+	beg = pdr.get_data_yahoo(securities, start=startDate.strftime('%Y-%m-%d'), end=startEndDate.strftime('%Y-%m-%d'),  as_panel = False, auto_adjust=False)
+	end = pdr.get_data_yahoo(securities, start=endDate.strftime('%Y-%m-%d'), end=endEndDate.strftime('%Y-%m-%d'),  as_panel = False, auto_adjust=False)
+	# allSecuritiesAllData = pdr.get_data_yahoo(securities, start=dateStart.strftime('%Y-%m-%d'), end=dateEnd.strftime('%Y-%m-%d'),  as_panel = False)
+
+	allSecuritiesAllData = pd.concat([end['Adj Close'], beg['Adj Close']])
+	w = weights * get_daily_returns_df(allSecuritiesAllData)
+	if(isinstance(w, pd.DataFrame)):
+		w = w.sum(axis = 1, skipna = True)
+	# print(w[0])
+	return w[0]
 
 def one_year_risk_adjusted_return(threeFactor, securities, weights):
 	r = requests.get(zip_file_url, stream=True)
@@ -53,7 +95,10 @@ def one_year_risk_adjusted_return(threeFactor, securities, weights):
 	# allSecuritiesAllData = pdr.get_data_yahoo(securities, start=dateStart.strftime('%Y-%m-%d'), end=dateEnd.strftime('%Y-%m-%d'),  as_panel = False)
 	allSecuritiesAllData = allSecuritiesAllData['Adj Close'][1:]
 	w = weights * get_daily_returns_df(allSecuritiesAllData)
-	dailyPortfolioReturns = pd.DataFrame(w.sum(axis = 1, skipna = True), columns=["Daily Portfolio Returns"])
+	if isinstance(w, pd.DataFrame):
+		dailyPortfolioReturns = pd.DataFrame(w.sum(axis=1, skipna=True), columns=["Daily Portfolio Returns"])
+	else:
+		dailyPortfolioReturns = pd.DataFrame(w.values, columns=["Daily Portfolio Returns"], index=w.index)
 	dfjoin = dailydf.join(dailyPortfolioReturns).dropna()
 
 	portfolioExcessReturns = pd.DataFrame(dfjoin['Daily Portfolio Returns'].values - dfjoin['RF'].values, columns=['RP-RF'], index=dailyPortfolioReturns.index.values.flatten())
@@ -71,9 +116,15 @@ def one_year_risk_adjusted_return(threeFactor, securities, weights):
 	# with sklearn
 	regression = linear_model.LinearRegression()
 	regression.fit(X, Y)
-
 	print('Intercept: \n', regression.intercept_)
 	print('Coefficients: \n', regression.coef_)
+	ret = regression.intercept_
+	return '{:.1%}'.format(ret)
 
 # one_year_risk_adjusted_return(True, securities=['SPY', 'LYV', 'HXL'], weights=[1/3, 1/3, 1/3])
-year_to_date_return(securities=['HXL'], weights=[1])
+# one_year_risk_ adjusted_return(True, securities=['HXL'], weights=[1])
+# year_to_date_return(securities=['HXL'], weights=[1])
+# security_total_return(securities=['HXL'], entry_price=None, entry_date="2020-01-03", exit_price=None, exit_date="2020-01-17")
+# security_total_return(securities=['HXL'], entry_price=None, entry_date="2020-01-03", exit_price=78.18, exit_date="2020-01-17")
+# security_total_return(securities=['HXL'], entry_price=75.35, entry_date="2020-01-03", exit_price=78.18, exit_date="2020-01-17")
+# security_total_return(securities=['HXL'], entry_price=75.35, entry_date="2020-01-03", exit_price=None, exit_date=datetime.datetime.today().strftime('%Y-%m-%d'))
