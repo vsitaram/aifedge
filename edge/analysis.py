@@ -22,21 +22,31 @@ def get_daily_returns_df(prices):
     return ((prices / prices.shift(1) - 1).dropna())
 
 def year_to_date_return(securities, weights):
-	startDate = datetime.datetime.today()
-	startEndDate = startDate + datetime.timedelta(days=1)
-	endDate = datetime.datetime(startDate.year - 1, 12, 31)
+	endDate = datetime.datetime.today()
 	while(endDate.weekday() > 4):
-	  endDate = endDate - datetime.timedelta(days=1)
+	  	endDate = endDate - datetime.timedelta(days=1)
 	endEndDate = endDate + datetime.timedelta(days=1)
+	startDate = datetime.datetime(endDate.year - 1, 12, 31)
+	while(startDate.weekday() > 4):
+	  	startDate = startDate - datetime.timedelta(days=1)
+	startEndDate = startDate + datetime.timedelta(days=1)
+	print(str(startDate))
+	print(str(startEndDate))
+	print(str(endDate))
+	print(str(endEndDate))
 	beg = pdr.get_data_yahoo(securities, start=startDate.strftime('%Y-%m-%d'), end=startEndDate.strftime('%Y-%m-%d'),  as_panel = False, auto_adjust=False)
+	print(beg)
 	end = pdr.get_data_yahoo(securities, start=endDate.strftime('%Y-%m-%d'), end=endEndDate.strftime('%Y-%m-%d'),  as_panel = False, auto_adjust=False)
 	# allSecuritiesAllData = pdr.get_data_yahoo(securities, start=dateStart.strftime('%Y-%m-%d'), end=dateEnd.strftime('%Y-%m-%d'),  as_panel = False)
+	print(end)
 
-	allSecuritiesAllData = pd.concat([end['Adj Close'], beg['Adj Close']])
+	allSecuritiesAllData = pd.concat([beg['Adj Close'], end['Adj Close']])
+	print(allSecuritiesAllData)
 	w = weights * get_daily_returns_df(allSecuritiesAllData)
 	if(isinstance(w, pd.DataFrame)):
 		w = w.sum(axis = 1, skipna = True)
-	# print(w[0])
+	print(w)
+	print("YTD: " + str(w[0]))
 	ret = w[0]
 	return '{:.1%}'.format(ret)
 
@@ -50,6 +60,8 @@ def security_total_return(securities, entry_price, entry_date, exit_price, exit_
 
 		if exit_price is None:
 			endDate = startDate = parser.parse(exit_date)
+			while(endDate.weekday() > 4):
+				endDate = endDate - datetime.timedelta(days=1)
 			endEndDate = endDate + datetime.timedelta(days=1)
 			end = pdr.get_data_yahoo(securities, start=endDate.strftime('%Y-%m-%d'), end=endEndDate.strftime('%Y-%m-%d'),  as_panel = False, auto_adjust=False)
 			exit_price = end['Adj Close'][0]
@@ -61,7 +73,7 @@ def security_total_return(securities, entry_price, entry_date, exit_price, exit_
 	# allSecuritiesAllData = pdr.get_data_yahoo(securities, start=dateStart.strftime('%Y-%m-%d'), end=dateEnd.strftime('%Y-%m-%d'),  as_panel = False)
 	
 
-def portfolio_total_return(securities, weights, startDate, endDate):
+def portfolio_total_return(securities, weights, startDate, endDate): #need to fix this with csv data
 	startDate = datetime.datetime.today()
 	startEndDate = startDate + datetime.timedelta(days=1)
 	endDate = datetime.datetime(startDate.year - 1, 12, 31)
@@ -123,7 +135,7 @@ def one_year_risk_adjusted_return(threeFactor, securities, weights):
 
 # one_year_risk_adjusted_return(True, securities=['SPY', 'LYV', 'HXL'], weights=[1/3, 1/3, 1/3])
 # one_year_risk_ adjusted_return(True, securities=['HXL'], weights=[1])
-# year_to_date_return(securities=['HXL'], weights=[1])
+year_to_date_return(securities=['HXL'], weights=[1])
 # security_total_return(securities=['HXL'], entry_price=None, entry_date="2020-01-03", exit_price=None, exit_date="2020-01-17")
 # security_total_return(securities=['HXL'], entry_price=None, entry_date="2020-01-03", exit_price=78.18, exit_date="2020-01-17")
 # security_total_return(securities=['HXL'], entry_price=75.35, entry_date="2020-01-03", exit_price=78.18, exit_date="2020-01-17")
