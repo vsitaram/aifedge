@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "e3a3887bc09dcae45c2df83ad1a1d94065d951213884fcfeb64a43f91b48d212"
+            "sha256": "041d4623d0ec7ae4bab5ee0a015f692b9d976fc0e73d81365cee0ea9197a2585"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -99,6 +99,13 @@
             ],
             "index": "pypi",
             "version": "==20.0.4"
+        },
+        "holidays": {
+            "hashes": [
+                "sha256:3182c4a6fef8d01a829468362ace9c3bba7645873610535fef53454dbb4ea092"
+            ],
+            "index": "pypi",
+            "version": "==0.9.12"
         },
         "idna": {
             "hashes": [

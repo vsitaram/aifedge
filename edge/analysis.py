@@ -10,6 +10,7 @@ import calendar
 from dateutil.relativedelta import relativedelta
 from dateutil import parser
 from sklearn import linear_model
+import holidays
 import statsmodels.api as sm
 yf.pdr_override() # <== that's all it takes :-)
 
@@ -23,17 +24,20 @@ def get_daily_returns_df(prices):
 
 def year_to_date_return(securities, weights):
 	endDate = datetime.datetime.today()
-	while(endDate.weekday() > 4):
-	  	endDate = endDate - datetime.timedelta(days=1)
+	while(endDate.weekday() > 4 or endDate in holidays.US(years=endDate.year)):
+		endDate = endDate - datetime.timedelta(days=1)
 	endEndDate = endDate + datetime.timedelta(days=1)
 	startDate = datetime.datetime(endDate.year - 1, 12, 31)
-	while(startDate.weekday() > 4):
+	while(startDate.weekday() > 4 or startDate in holidays.US(years=startDate.year)):
 	  	startDate = startDate - datetime.timedelta(days=1)
 	startEndDate = startDate + datetime.timedelta(days=1)
 	print(str(startDate))
 	print(str(startEndDate))
 	print(str(endDate))
 	print(str(endEndDate))
+	# print(datetime.date(2020, 1, 20) in holidays.US(years=[startDate.year, endDate.year]))
+	# print(holidays.US(years=[startDate.year, endDate.year]))
+
 	beg = pdr.get_data_yahoo(securities, start=startDate.strftime('%Y-%m-%d'), end=startEndDate.strftime('%Y-%m-%d'),  as_panel = False, auto_adjust=False)
 	print(beg)
 	end = pdr.get_data_yahoo(securities, start=endDate.strftime('%Y-%m-%d'), end=endEndDate.strftime('%Y-%m-%d'),  as_panel = False, auto_adjust=False)
