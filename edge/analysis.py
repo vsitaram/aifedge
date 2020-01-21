@@ -64,7 +64,7 @@ def security_total_return(securities, entry_price, entry_date, exit_price, exit_
 
 		if exit_price is None:
 			endDate = startDate = parser.parse(exit_date)
-			while(endDate.weekday() > 4):
+			while(endDate.weekday() > 4 or endDate in holidays.US(years=endDate.year)):
 				endDate = endDate - datetime.timedelta(days=1)
 			endEndDate = endDate + datetime.timedelta(days=1)
 			end = pdr.get_data_yahoo(securities, start=endDate.strftime('%Y-%m-%d'), end=endEndDate.strftime('%Y-%m-%d'),  as_panel = False, auto_adjust=False)
