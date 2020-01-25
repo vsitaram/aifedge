@@ -27,6 +27,7 @@ def year_to_date_return(securities, weights):
 	while(endDate.weekday() > 4 or endDate in holidays.US(years=endDate.year)):
 		endDate = endDate - datetime.timedelta(days=1)
 	endEndDate = endDate + datetime.timedelta(days=1)
+	
 	startDate = datetime.datetime(endDate.year - 1, 12, 31)
 	while(startDate.weekday() > 4 or startDate in holidays.US(years=startDate.year)):
 	  	startDate = startDate - datetime.timedelta(days=1)
