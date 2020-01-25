@@ -1,3 +1,5 @@
 https://forums.aws.amazon.com/thread.jspa?threadID=170579
 https://testdriven.io/blog/storing-django-static-and-media-files-on-amazon-s3/
 https://docs.djangoproject.com/en/3.0/intro/
+
+sudo apt-get install libpq-dev python3-dev
