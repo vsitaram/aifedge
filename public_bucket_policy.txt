@@ -1,0 +1,16 @@
+{
+    "Version": "2008-10-17",
+    "Id": "Policy-id",
+    "Statement": [
+        {
+            "Sid": "",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "*"
+            },
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::aifedge/files/*",
+            "Condition": {}
+        }
+    ]
+}
