@@ -40,10 +40,10 @@ def getAIFData():
 	csv_string = body.read().decode('utf-8')
 	df = pd.read_csv(StringIO(csv_string), skiprows=2, usecols=['Date', 'NAV'], index_col='Date')
 	df.drop(df.tail(1).index,inplace=True)
-	print(df.index)
+	# print(df.index)
 	# df.index = df.index.apply(convertDateFormat)
 	df.index = pd.to_datetime(df.index.map(lambda x : convertDateFormat(x)))
-	print(df)
+	# print(df)
 	return df
 
 aifNAVdata = getAIFData()
@@ -129,25 +129,61 @@ def security_total_return(securities, entry_price, entry_date, exit_price, exit_
 	# allSecuritiesAllData = pdr.get_data_yahoo(securities, start=dateStart.strftime('%Y-%m-%d'), end=dateEnd.strftime('%Y-%m-%d'),  as_panel = False)
 	
 
-def portfolio_total_return(securities, weights, startDate, endDate): #need to fix this with csv data
-	startDate = datetime.datetime.today()
-	startEndDate = startDate + datetime.timedelta(days=1)
-	endDate = datetime.datetime(startDate.year - 1, 12, 31)
-	while(endDate.weekday() > 4):
+def portfolio_total_return(startDate, endDate):
+	while(endDate.weekday() > 4 or endDate in holidays.US(years=endDate.year)):
 		endDate = endDate - datetime.timedelta(days=1)
-	endEndDate = endDate + datetime.timedelta(days=1)
-	beg = pdr.get_data_yahoo(securities, start=startDate.strftime('%Y-%m-%d'), end=startEndDate.strftime('%Y-%m-%d'),  as_panel = False, auto_adjust=False)
-	end = pdr.get_data_yahoo(securities, start=endDate.strftime('%Y-%m-%d'), end=endEndDate.strftime('%Y-%m-%d'),  as_panel = False, auto_adjust=False)
-	# allSecuritiesAllData = pdr.get_data_yahoo(securities, start=dateStart.strftime('%Y-%m-%d'), end=dateEnd.strftime('%Y-%m-%d'),  as_panel = False)
 
-	allSecuritiesAllData = pd.concat([end['Adj Close'], beg['Adj Close']])
-	w = weights * get_daily_returns_df(allSecuritiesAllData)
-	if(isinstance(w, pd.DataFrame)):
-		w = w.sum(axis = 1, skipna = True)
-	# print(w[0])
-	return w[0]
+	while(startDate.weekday() > 4 or startDate in holidays.US(years=startDate.year)):
+	  	startDate = startDate - datetime.timedelta(days=1)
 
-def one_year_risk_adjusted_return(threeFactor, securities, weights):
+	print(aifNAVdata.loc[startDate.strftime('%Y-%m-%d')])
+	print(aifNAVdata.loc[endDate.strftime('%Y-%m-%d')])
+	ret = aifNAVdata.loc[endDate.strftime('%Y-%m-%d')][0] / aifNAVdata.loc[startDate.strftime('%Y-%m-%d')][0] - 1
+	print("Total portfolio return: " + str(ret))
+	return '{:.1%}'.format(ret)
+
+
+# Find RAR of a portfolio constructed from AIF's NAV
+def one_year_risk_adjusted_return_from_NAV(threeFactor):
+	r = requests.get(zip_file_url, stream=True)
+	z = zipfile.ZipFile(BytesIO(r.content))
+	dailyFactorDF = pd.read_csv(z.open('F-F_Research_Data_5_Factors_2x3_daily.CSV'), skiprows=3)[-300:]
+	dailyFactorDF = dailyFactorDF.rename(columns={"Unnamed: 0": "Date"})
+
+	dailyFactorDF.index = [datetime.datetime.strptime(str(date_num), '%Y%m%d') for date_num in dailyFactorDF['Date'].tolist()]
+	dailyFactorDF = dailyFactorDF.drop(columns=['Date'])
+
+	last_index = dailyFactorDF.index[-1]
+	endDate = datetime.datetime(last_index.year, last_index.month, calendar.monthrange(last_index.year, last_index.month)[1])
+	startDate = last_index - relativedelta(years=1)
+
+	dailyPortfolioReturns = get_daily_returns_df(aifNAVdata)
+	dailyPortfolioReturns = pd.DataFrame(dailyPortfolioReturns.values, columns=["Daily Portfolio Returns"], index=dailyPortfolioReturns.index)
+	# print(dailyPortfolioReturns)
+	dfjoin = dailyFactorDF.join(dailyPortfolioReturns).dropna()
+	# print(dfjoin)
+	portfolioExcessReturns = pd.DataFrame(dfjoin['Daily Portfolio Returns'].values - dfjoin['RF'].values, columns=['RP-RF'], index=dfjoin.index.values.flatten())
+	# print(portfolioExcessReturns)
+	dfjoin = dfjoin.join(portfolioExcessReturns).drop(columns=['Daily Portfolio Returns', 'RF'])
+
+	if threeFactor:
+		factors = dfjoin.columns.tolist()[0:-4]
+	else:
+		factors = dfjoin.columns.tolist()[0:-2]
+
+	X = dfjoin[factors] 
+	Y = dfjoin['RP-RF']
+	 
+	# with sklearn
+	regression = linear_model.LinearRegression()
+	regression.fit(X, Y)
+	print('Intercept: \n', regression.intercept_)
+	print('Coefficients: \n', regression.coef_)
+	ret = regression.intercept_
+	return '{:.1%}'.format(ret)
+
+# Find RAR of a portfolio constructed from individual stock info from Yahoo Finance
+def one_year_risk_adjusted_return_from_securities(threeFactor, securities, weights):
 	r = requests.get(zip_file_url, stream=True)
 	z = zipfile.ZipFile(BytesIO(r.content))
 	dailydf = pd.read_csv(z.open('F-F_Research_Data_5_Factors_2x3_daily.CSV'), skiprows=3)[-300:]
@@ -192,8 +228,10 @@ def one_year_risk_adjusted_return(threeFactor, securities, weights):
 # one_year_risk_adjusted_return(True, securities=['SPY', 'LYV', 'HXL'], weights=[1/3, 1/3, 1/3])
 # one_year_risk_ adjusted_return(True, securities=['HXL'], weights=[1])
 # securities_year_to_date_return(securities=['HXL'], weights=[1])
-portfolio_year_to_date_return()
-
+# portfolio_year_to_date_return()
+# portfolio_total_return(datetime.datetime.strptime('2019-12-31', '%Y-%m-%d'), datetime.datetime.strptime('2020-02-07', '%Y-%m-%d'))
+# portfolio_total_return(datetime.datetime.strptime('2020-02-03', '%Y-%m-%d'), datetime.datetime.strptime('2020-02-07', '%Y-%m-%d'))
+one_year_risk_adjusted_return_from_NAV(True)
 # security_total_return(securities=['HXL'], entry_price=None, entry_date="2020-01-03", exit_price=None, exit_date="2020-01-17")
 # security_total_return(securities=['HXL'], entry_price=None, entry_date="2020-01-03", exit_price=78.18, exit_date="2020-01-17")
 # security_total_return(securities=['HXL'], entry_price=75.35, entry_date="2020-01-03", exit_price=78.18, exit_date="2020-01-17")
