@@ -15,7 +15,6 @@ from .analysis import security_total_return, year_to_date_return, one_year_risk_
 
 def dashboard(request):
 	template_name = 'edge/dashboard.html'
-	current_holdings = Pitch.objects.all()
 	current_holdings = Pitch.objects.filter(currently_invested=True)
 	recent_pitches = Pitch.objects.order_by('-pitch_date')[:6]
 	context = {
