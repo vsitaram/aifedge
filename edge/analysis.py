@@ -101,7 +101,7 @@ def securities_year_to_date_return(securities, weights):
 	return '{:.1%}'.format(ret)
 
 def portfolio_year_to_date_return():
-	endDate = datetime.datetime.today()
+	endDate = aifNAVdata.index[len(aifNAVdata) - 1]
 	while(endDate.weekday() > 4 or endDate in holidays.US(years=endDate.year)):
 		endDate = endDate - datetime.timedelta(days=1)
 
@@ -142,10 +142,9 @@ def security_total_return(securities, entry_price, entry_date, exit_price, exit_
 	# allSecuritiesAllData = pdr.get_data_yahoo(securities, start=dateStart.strftime('%Y-%m-%d'), end=dateEnd.strftime('%Y-%m-%d'),  as_panel = False)
 	
 
-def portfolio_total_return(startDate, endDate):
-	while(endDate.weekday() > 4 or endDate in holidays.US(years=endDate.year)):
-		endDate = endDate - datetime.timedelta(days=1)
-
+def portfolio_one_year_return():
+	endDate = aifNAVdata.index[len(aifNAVdata) - 1]
+	startDate = endDate - relativedelta(years=1)
 	while(startDate.weekday() > 4 or startDate in holidays.US(years=startDate.year)):
 	  	startDate = startDate - datetime.timedelta(days=1)
 
