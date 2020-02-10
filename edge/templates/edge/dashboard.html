@@ -106,7 +106,7 @@
                       <!--Card content-->
                       <div class="card-body">
                         <!-- Title -->
-                        <h1 class="text-center pb-5">Portfolio</h1>
+                        <h1 class="text-center pb-3">Portfolio</h1>
 
                         <canvas id="myChart"></canvas>
 
@@ -153,7 +153,7 @@
                                 <td class="align-middle">
                                     <div>
                                         <h3 class="my-0">{{ portfolio_one_year_return }}</h3>
-                                        <p class="my-0">1 Year Return</p>
+                                        <p class="my-0">1-Year Return</p>
                                     </div>
                                 </td>
                             </table>
@@ -166,7 +166,7 @@
                                 <td class="align-middle">
                                     <div>
                                         <h3 class="my-0">{{ one_year_risk_adjusted_return_from_NAV }}</h3>
-                                        <p class="my-0">1-year Risk-Adjusted Return</p>
+                                        <p class="my-0">1-Year Risk-Adjusted Return</p>
                                     </div>
                                 </td>
                             </table>
@@ -266,6 +266,7 @@
                                             {% endfor %}
 
                                         <p class="card-text col-5 text-right">{{ pitch.pitch_date }}</p>
+
                                     </div> 
 
                                     <div class="row d-flex justify-content-center">
@@ -273,7 +274,7 @@
                                             <a href="{% url 'edge:pitch' pitch.id %}" class="btn btn-primary btn-info btn-sm">See Pitch</a> 
                                         </div>
                                     </div> 
-                                                                 
+                                                        
                                 </div>
                             </div>
                             <!--/.Card-->
@@ -286,6 +287,7 @@
 
                     {% endfor %}
 
+
                     
                 </div>
                 <!--Grid row-->
@@ -293,6 +295,12 @@
             </section>
             <!--Section: Cards-->
 
+        </div>
+        <div style="display: none;" id="navData">
+            {{ AIFNAVDataForTemplate }}
+        </div>
+        <div style="display: none;" id="indexData">
+            {{ AIFIndexDataForTemplate }}
         </div>
     </main>
     <!--Main layout-->
@@ -326,6 +334,15 @@
     <script type="text/javascript" src="{% static 'edge/js/mdb.min.js' %}"></script>
     <!-- Initializations -->
     <script type="text/javascript">
+        var navDataString = document.getElementById('navData').innerHTML
+        // console.log(navDataString);
+        var navData = navDataString.slice(14, navDataString.length-13).split(", ");
+        // console.log(navData);
+
+        var indexDataString = document.getElementById('indexData').innerHTML;
+        var indexData = indexDataString.slice(15, indexDataString.length-11).split("\", \"");
+        // console.log(indexData);
+
         // Animations initialization
         new WOW().init();
         var ctx = document.getElementById("myChart").getContext('2d');
@@ -337,17 +354,20 @@
         var myChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+                labels: indexData,
+                // labels: Array.from({length: 2127}, () => Math.floor(Math.random() * 20000).toString()),
                 datasets: [{
-                    label: 'Position',
-                    data: [12, 19, 3, 5, 2, 3],
+                    label: 'NAV',
+                    data: navData,
                     backgroundColor: [
                         'rgba(54, 162, 235, 0.2)',
                     ],
                     borderColor: [
                         'rgba(54, 162, 235, 1)',
                     ],
-                    borderWidth: 1.5
+                    borderWidth: 1.5,
+                    pointRadius: 0,
+                    pointHoverRadius: 1
                 }]
             },
             options: {
@@ -355,14 +375,37 @@
                     display: false
                 },
                 scales: {
+                    xAxes: [{
+                        ticks: {
+                            major: {
+                                fontStyle: 'bold',
+                                fontColor: '#FF0000'
+                            }
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Date',
+                            fontStyle: 'bold',
+                            fontColor: '#FFFFFF',
+                            fontSize: 16
+                        }
+                    }],
                     yAxes: [{
                         ticks: {
                             beginAtZero: true
+                        }, 
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Net Asset Value',
+                            fontStyle: 'bold',
+                            fontColor: '#FFFFFF',
+                            fontSize: 16
                         }
                     }]
-                }
+                },
+
             }   
-        });
+        }); //disregard this 
 
         // alert($(window).width());
         // if( $(window).width() < 768) {

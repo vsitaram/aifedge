@@ -13,6 +13,7 @@ from sklearn import linear_model
 import holidays
 import statsmodels.api as sm
 import boto3
+import json
 yf.pdr_override() # <== that's all it takes :-)
 
 from decouple import config
@@ -48,6 +49,17 @@ def getAIFData():
 
 aifNAVdata = getAIFData()
 
+def AIFNAVDataForTemplate():
+	# print(len(aifNAVdata.values.flatten().tolist()))
+	return json.dumps(aifNAVdata.values.flatten().tolist())
+
+def AIFIndexDataForTemplate():
+	# print(aifNAVdata.index)
+	index = pd.Series(aifNAVdata.index).map(lambda x : x.strftime('%m-%d-%Y'))
+	# print(index.values.tolist())
+	# print(json.dumps(index.values.tolist()))
+	# print(len(index.values.tolist()))
+	return json.dumps(index.values.tolist())
 
 def get_daily_returns_df(prices):
     return ((prices / prices.shift(1) - 1).dropna())
@@ -231,7 +243,9 @@ def one_year_risk_adjusted_return_from_securities(threeFactor, securities, weigh
 # portfolio_year_to_date_return()
 # portfolio_total_return(datetime.datetime.strptime('2019-12-31', '%Y-%m-%d'), datetime.datetime.strptime('2020-02-07', '%Y-%m-%d'))
 # portfolio_total_return(datetime.datetime.strptime('2020-02-03', '%Y-%m-%d'), datetime.datetime.strptime('2020-02-07', '%Y-%m-%d'))
-one_year_risk_adjusted_return_from_NAV(True)
+# one_year_risk_adjusted_return_from_NAV(True)
+AIFIndexDataForTemplate()
+AIFNAVDataForTemplate()
 # security_total_return(securities=['HXL'], entry_price=None, entry_date="2020-01-03", exit_price=None, exit_date="2020-01-17")
 # security_total_return(securities=['HXL'], entry_price=None, entry_date="2020-01-03", exit_price=78.18, exit_date="2020-01-17")
 # security_total_return(securities=['HXL'], entry_price=75.35, entry_date="2020-01-03", exit_price=78.18, exit_date="2020-01-17")

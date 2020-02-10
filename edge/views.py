@@ -11,7 +11,7 @@ from dateutil.relativedelta import relativedelta
 
 
 from .models import Pitch, Member, Document
-from .analysis import securities_year_to_date_return, portfolio_year_to_date_return, security_total_return, portfolio_total_return, one_year_risk_adjusted_return_from_NAV, one_year_risk_adjusted_return_from_securities
+from .analysis import AIFNAVDataForTemplate, AIFIndexDataForTemplate, securities_year_to_date_return, portfolio_year_to_date_return, security_total_return, portfolio_total_return, one_year_risk_adjusted_return_from_NAV, one_year_risk_adjusted_return_from_securities
 
 
 def dashboard(request):
@@ -22,7 +22,9 @@ def dashboard(request):
     	'current_holdings': current_holdings,
     	'recent_pitches': recent_pitches,
         'portfolio_year_to_date_return': portfolio_year_to_date_return(),
-        'one_year_risk_adjusted_return_from_NAV': one_year_risk_adjusted_return_from_NAV(threeFactor=True)
+        'one_year_risk_adjusted_return_from_NAV': one_year_risk_adjusted_return_from_NAV(threeFactor=True),
+        'AIFNAVDataForTemplate': AIFNAVDataForTemplate(),
+        'AIFIndexDataForTemplate': AIFIndexDataForTemplate()
 
     }
     endDate = datetime.datetime.today()
