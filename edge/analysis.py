@@ -14,6 +14,7 @@ import holidays
 import statsmodels.api as sm
 import boto3
 import json
+from pytz import timezone
 yf.pdr_override() # <== that's all it takes :-)
 
 from decouple import config
@@ -66,8 +67,15 @@ def get_daily_returns_df(prices):
     return ((prices / prices.shift(1) - 1).dropna())
 
 def securities_year_to_date_return(securities, weights):
-	endDate = datetime.datetime.today()
+	eastern = timezone('US/Eastern')
+	endDate = datetime.datetime.now(eastern)
+	
+	beforeMondayDayEnd = endDate.hour < 17 and endDate.weekday() == 0
+	if beforeMondayDayEnd:
+		endDate = datetime.datetime.today() - datetime.timedelta(days=1)
+
 	while(endDate.weekday() > 4 or endDate in holidays.US(years=endDate.year)):
+		print(endDate)
 		endDate = endDate - datetime.timedelta(days=1)
 	endEndDate = endDate + datetime.timedelta(days=1)
 	
@@ -75,10 +83,10 @@ def securities_year_to_date_return(securities, weights):
 	while(startDate.weekday() > 4 or startDate in holidays.US(years=startDate.year)):
 	  	startDate = startDate - datetime.timedelta(days=1)
 	startEndDate = startDate + datetime.timedelta(days=1)
-	print(str(startDate))
-	print(str(startEndDate))
-	print(str(endDate))
-	print(str(endEndDate))
+	print("securities_year_to_date_return :" + str(startDate))
+	print("securities_year_to_date_return :" + str(startEndDate))
+	print("securities_year_to_date_return :" + str(endDate))
+	print("securities_year_to_date_return :" + str(endEndDate))
 	# print(datetime.date(2020, 1, 20) in holidays.US(years=[startDate.year, endDate.year]))
 	# print(holidays.US(years=[startDate.year, endDate.year]))
 	
@@ -96,7 +104,7 @@ def securities_year_to_date_return(securities, weights):
 		w = w.sum(axis = 1, skipna = True)
 
 	print(w)
-	print("YTD: " + str(w[0]))
+	print("securities_year_to_date_return :" + str(w[0]))
 	ret = w[0]
 	return '{:.1%}'.format(ret)
 
@@ -116,7 +124,7 @@ def portfolio_year_to_date_return():
 	print(aifNAVdata.loc[startDate.strftime('%Y-%m-%d')])
 	print(aifNAVdata.loc[endDate.strftime('%Y-%m-%d')])
 	ret = aifNAVdata.loc[endDate.strftime('%Y-%m-%d')][0] / aifNAVdata.loc[startDate.strftime('%Y-%m-%d')][0] - 1
-	print("YTD: " + str(ret))
+	print("Portfolio YTD: " + str(ret))
 	return '{:.1%}'.format(ret)
 
 def security_total_return(securities, entry_price, entry_date, exit_price, exit_date):
@@ -129,6 +137,13 @@ def security_total_return(securities, entry_price, entry_date, exit_price, exit_
 
 		if exit_price is None:
 			endDate = startDate = parser.parse(exit_date)
+
+			eastern = timezone('US/Eastern')
+			now = datetime.datetime.now(eastern)
+			beforeMondayDayEnd = now.hour < 17 and now.weekday() == 0 and endDate.weekday() == 0
+			if beforeMondayDayEnd:
+				endDate = datetime.datetime.today() - datetime.timedelta(days=1)
+
 			while(endDate.weekday() > 4 or endDate in holidays.US(years=endDate.year)):
 				endDate = endDate - datetime.timedelta(days=1)
 			endEndDate = endDate + datetime.timedelta(days=1)
