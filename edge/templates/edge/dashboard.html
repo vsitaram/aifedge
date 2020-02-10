@@ -19,7 +19,7 @@
     <!-- MDBootstrap Datatables  -->
     <link rel="stylesheet" href="{% static 'edge/css/addons/datatables.min.css' %}">
     <!-- Your custom styles (optional) -->
-    <link rel="stylesheet" href="{% static 'edge/css/style.min.css' %}">
+    <link rel="stylesheet" href="{% static 'edge/css/style.css' %}">
 
     <style type="text/css">
         @media (min-width: 576px) {
@@ -30,7 +30,7 @@
     </style>
 </head>
 
-<body class="elegant-color-dark">
+<body class="elegant-color-dark scrollbar scrollbar-info">
 
     <!--Main Navigation-->
     <header>
@@ -407,11 +407,8 @@
             }   
         }); //disregard this 
 
-        // alert($(window).width());
-        // if( $(window).width() < 768) {
-        //     alert($(window).width());
-        //     $("#portfolio-performance").setAttribute(height, 400);
-        // } 
+        // var scrollbar = document.querySelector('.scrollbar');
+        // var ps = new PerfectScrollbar(scrollbar); 
     </script>
 </body>
 
