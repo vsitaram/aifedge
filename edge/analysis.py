@@ -18,6 +18,7 @@ yf.pdr_override() # <== that's all it takes :-)
 
 from decouple import config
 import os
+from django.conf import settings
 
 zip_file_url ='https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/F-F_Research_Data_5_Factors_2x3_daily_CSV.zip'
 
@@ -25,18 +26,18 @@ def convertDateFormat(indexDate):
 	return datetime.datetime.strptime(str(int(indexDate)), '%Y%m%d').strftime('%Y-%m-%d')
 
 def getAIFData():
-	AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
-	AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
-	AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
-	AWS_DATA_LOCATION = config('AWS_DATA_LOCATION')
+	# data_AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
+	# AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
+	# AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
+	# AWS_DATA_LOCATION = config('AWS_DATA_LOCATION')
 
-	client = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY_ID,
-	        aws_secret_access_key=AWS_SECRET_ACCESS_KEY)
+	client = boto3.client('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+	        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
 
 	
 
-	object_key = AWS_DATA_LOCATION + '/data.csv'
-	csv_obj = client.get_object(Bucket=AWS_STORAGE_BUCKET_NAME, Key=object_key)
+	object_key = settings.AWS_DATA_LOCATION + '/data.csv'
+	csv_obj = client.get_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=object_key)
 	body = csv_obj['Body']
 	csv_string = body.read().decode('utf-8')
 	df = pd.read_csv(StringIO(csv_string), skiprows=2, usecols=['Date', 'NAV'], index_col='Date')
