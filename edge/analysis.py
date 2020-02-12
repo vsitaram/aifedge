@@ -183,16 +183,20 @@ def one_year_risk_adjusted_return_from_NAV(threeFactor):
 	last_index = dailyFactorDF.index[-1]
 	endDate = datetime.datetime(last_index.year, last_index.month, calendar.monthrange(last_index.year, last_index.month)[1])
 	startDate = last_index - relativedelta(years=1)
+	while(startDate.weekday() > 4 or startDate in holidays.US(years=startDate.year)):
+	  	startDate = startDate - datetime.timedelta(days=1)
+	print(startDate)
+	print(endDate)
 
-	dailyPortfolioReturns = get_daily_returns_df(aifNAVdata)
+	dailyPortfolioReturns = get_daily_returns_df(aifNAVdata[startDate.strftime('%Y-%m-%d'):endDate.strftime('%Y-%m-%d')])
 	dailyPortfolioReturns = pd.DataFrame(dailyPortfolioReturns.values, columns=["Daily Portfolio Returns"], index=dailyPortfolioReturns.index)
 	# print(dailyPortfolioReturns)
 	dfjoin = dailyFactorDF.join(dailyPortfolioReturns).dropna()
-	# print(dfjoin)
+	print(dfjoin)
 	portfolioExcessReturns = pd.DataFrame(dfjoin['Daily Portfolio Returns'].values - dfjoin['RF'].values, columns=['RP-RF'], index=dfjoin.index.values.flatten())
 	# print(portfolioExcessReturns)
 	dfjoin = dfjoin.join(portfolioExcessReturns).drop(columns=['Daily Portfolio Returns', 'RF'])
-
+	print(dfjoin)
 	if threeFactor:
 		factors = dfjoin.columns.tolist()[0:-4]
 	else:
@@ -258,9 +262,9 @@ def one_year_risk_adjusted_return_from_securities(threeFactor, securities, weigh
 # portfolio_year_to_date_return()
 # portfolio_total_return(datetime.datetime.strptime('2019-12-31', '%Y-%m-%d'), datetime.datetime.strptime('2020-02-07', '%Y-%m-%d'))
 # portfolio_total_return(datetime.datetime.strptime('2020-02-03', '%Y-%m-%d'), datetime.datetime.strptime('2020-02-07', '%Y-%m-%d'))
-# one_year_risk_adjusted_return_from_NAV(True)
-AIFIndexDataForTemplate()
-AIFNAVDataForTemplate()
+one_year_risk_adjusted_return_from_NAV(True)
+# AIFIndexDataForTemplate()
+# AIFNAVDataForTemplate()
 # security_total_return(securities=['HXL'], entry_price=None, entry_date="2020-01-03", exit_price=None, exit_date="2020-01-17")
 # security_total_return(securities=['HXL'], entry_price=None, entry_date="2020-01-03", exit_price=78.18, exit_date="2020-01-17")
 # security_total_return(securities=['HXL'], entry_price=75.35, entry_date="2020-01-03", exit_price=78.18, exit_date="2020-01-17")
