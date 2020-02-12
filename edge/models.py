@@ -25,9 +25,9 @@ class Pitch(models.Model):
     theses_for_investment = models.TextField(default="No Theses")
     misperceptions = models.TextField(default="No Misperceptions")
     major_concerns = models.TextField(default="No Major Concerns")
-    reasons_for_weight = models.TextField(default="No Reasons for Weight")
-    key_signposts = models.TextField(default="No Key Signposts")
     catalysts = models.TextField(default="No Catalysts")
+    key_signposts = models.TextField(default="No Key Signposts")
+    reasons_for_weight = models.TextField(default="No Reasons for Weight")
     threats_downsides = models.TextField(default="No Threats")
     other_notes = models.TextField(default="No Other Notes")
 
