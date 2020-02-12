@@ -198,12 +198,15 @@ def one_year_risk_adjusted_return_from_NAV(threeFactor):
 	dfjoin = dfjoin.join(portfolioExcessReturns).drop(columns=['Daily Portfolio Returns', 'RF'])
 	print(dfjoin)
 	if threeFactor:
-		factors = dfjoin.columns.tolist()[0:-4]
+		factors = dfjoin.columns.tolist()[0:3]
 	else:
-		factors = dfjoin.columns.tolist()[0:-2]
+		factors = dfjoin.columns.tolist()[0:5]
 
+	print(factors)
 	X = dfjoin[factors] 
 	Y = dfjoin['RP-RF']
+	# print(X)
+	# print(Y)
 	 
 	# with sklearn
 	regression = linear_model.LinearRegression()
