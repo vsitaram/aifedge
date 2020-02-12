@@ -189,7 +189,7 @@ def one_year_risk_adjusted_return_from_NAV(threeFactor):
 	print(endDate)
 
 	dailyPortfolioReturns = get_daily_returns_df(aifNAVdata[startDate.strftime('%Y-%m-%d'):endDate.strftime('%Y-%m-%d')])
-	dailyPortfolioReturns = pd.DataFrame(dailyPortfolioReturns.values, columns=["Daily Portfolio Returns"], index=dailyPortfolioReturns.index)
+	dailyPortfolioReturns = pd.DataFrame(dailyPortfolioReturns.values, columns=["Daily Portfolio Returns"], index=dailyPortfolioReturns.index) * 100
 	# print(dailyPortfolioReturns)
 	dfjoin = dailyFactorDF.join(dailyPortfolioReturns).dropna()
 	print(dfjoin)
@@ -213,7 +213,7 @@ def one_year_risk_adjusted_return_from_NAV(threeFactor):
 	regression.fit(X, Y)
 	print('Intercept: \n', regression.intercept_)
 	print('Coefficients: \n', regression.coef_)
-	ret = regression.intercept_
+	ret = regression.intercept_ * 365 / 100
 	return '{:.1%}'.format(ret)
 
 # Find RAR of a portfolio constructed from individual stock info from Yahoo Finance
