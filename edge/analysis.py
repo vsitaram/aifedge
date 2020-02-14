@@ -67,6 +67,7 @@ def get_daily_returns_df(prices):
     return ((prices / prices.shift(1) - 1).dropna())
 
 def securities_year_to_date_return(securities, weights):
+	print('start')
 	eastern = timezone('US/Eastern')
 	endDate = datetime.datetime.now(eastern)
 	
@@ -97,9 +98,10 @@ def securities_year_to_date_return(securities, weights):
 	# allSecuritiesAllData = pdr.get_data_yahoo(securities, start=dateStart.strftime('%Y-%m-%d'), end=dateEnd.strftime('%Y-%m-%d'),  as_panel = False)
 	print(end)
 
-	allSecuritiesAllData = pd.concat([beg['Adj Close'], end['Adj Close']])
+	allSecuritiesAllData = pd.concat([beg['Adj Close'], end['Adj Close']]).dropna()
 	print(allSecuritiesAllData)
 	w = weights * get_daily_returns_df(allSecuritiesAllData)
+	print(w)
 	if(isinstance(w, pd.DataFrame)):
 		w = w.sum(axis = 1, skipna = True)
 
