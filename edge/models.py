@@ -21,6 +21,8 @@ class Pitch(models.Model):
     pitch_price = models.FloatField(default=0.0)
     entry_date = models.DateField(null=True, blank=True)
     entry_price = models.FloatField(null=True, blank=True)
+    exit_date = models.DateField(null=True, blank=True)
+    exit_price = models.FloatField(null=True, blank=True)
     currently_invested = models.BooleanField(default=False)
     theses_for_investment = models.TextField(default="No Theses")
     misperceptions = models.TextField(default="No Misperceptions")

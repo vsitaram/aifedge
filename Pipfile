@@ -25,6 +25,7 @@ whitenoise = "*"
 psycopg2 = "*"
 django-heroku = "*"
 holidays = "*"
+django-cleanup = "*"
 
 [requires]
 python_version = "3.6"

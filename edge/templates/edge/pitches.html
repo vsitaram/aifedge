@@ -109,6 +109,8 @@
                   <th class="th-sm">Title</th>
                   <th class="th-sm">Date Pitched</th>
                   <th class="th-sm">Pitched By</th>
+                  <th class="th-sm">Price Pitched</th>
+                  <th class="th-sm">Current Price</th>
                   <th class="th-sm">Investment Entered</th>
                   <th class="th-sm">Currently Invested</th>
                 </tr>
@@ -126,6 +128,8 @@
                               {% endif %}
                           {% endfor %}
                       </td>
+                      <td>{{ pitch.pitch_price }}</td>
+                      <td>{{ pitch.pitch_price }}</td>
                       <td>{{ pitch.investment_entered }}</td>
                       <td>{{ pitch.currently_invested }}</td>
                     </tr>                    

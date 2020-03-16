@@ -296,12 +296,6 @@
             <!--Section: Cards-->
 
         </div>
-        <div style="display: none;" id="navData">
-            {{ AIFNAVDataForTemplate }}
-        </div>
-        <div style="display: none;" id="indexData">
-            {{ AIFIndexDataForTemplate }}
-        </div>
     </main>
     <!--Main layout-->
 
@@ -334,15 +328,91 @@
     <script type="text/javascript" src="{% static 'edge/js/mdb.min.js' %}"></script>
     <!-- Initializations -->
     <script type="text/javascript">
-        var navDataString = document.getElementById('navData').innerHTML
+        var navDataString = "{{ AIFNAVDataForTemplate }}";
         // console.log(navDataString);
-        var navData = navDataString.slice(14, navDataString.length-13).split(", ");
+        var navData = Array.from(navDataString.slice(1, navDataString.length-1).split(", "), x => parseInt(x));
         // console.log(navData);
 
-        var indexDataString = document.getElementById('indexData').innerHTML;
-        var indexData = indexDataString.slice(15, indexDataString.length-11).split("\", \"");
+        var indexDataString = "{{ AIFIndexDataForTemplate }}";
+        // console.log(indexDataString);
+        var indexData = indexDataString.slice(7, indexDataString.length-7).split("&quot;, &quot;");
         // console.log(indexData);
 
+        var entryAndExitDatesString = "{{ entry_and_exit_dates }}"
+        console.log(entryAndExitDatesString);
+        var entryAndExitDates = JSON.parse(entryAndExitDatesString.slice(0, entryAndExitDatesString.length).replace(/&#x27;/g, '\"'));
+        console.log(entryAndExitDates);
+
+        var originalLineDraw = Chart.controllers.line.prototype.draw;
+        Chart.helpers.extend(Chart.controllers.line.prototype, {
+            draw: function() {
+                originalLineDraw.apply(this, arguments);
+
+                var chart = this.chart;
+                var ctx = chart.chart.ctx;
+
+                var entryAndExitDates = chart.config.data.entryAndExitDates;
+                // console.log(entryAndExitDates);
+                if (entryAndExitDates) {
+                    for(var i = 0; i < entryAndExitDates.length; i++) {
+                        console.log("entryAndExitDates: " + entryAndExitDates[i]);
+                        var keys = Object.keys(entryAndExitDates[i]);
+                        // console.log(keys);
+                        // console.log("keys: " + typeof(keys));
+                        for(var keyIndex = 1; keyIndex < keys.length; keyIndex++) {
+                            if(entryAndExitDates[i][keys[keyIndex]].localeCompare("NULL") != 0) {
+                                var xaxis = chart.scales['x-axis-0'];
+                                var yaxis = chart.scales['y-axis-0'];
+                                // console.log('entryAndExitDates[i][keys[keyIndex]]: ' + entryAndExitDates[i][keys[keyIndex]]);
+                                var index = indexData.indexOf(entryAndExitDates[i][keys[keyIndex]]);
+                                ctx.save();
+                                ctx.beginPath();
+                                ctx.moveTo(xaxis.getPixelForValue(undefined, index), yaxis.top);
+                                ctx.strokeStyle = '#ff0000';
+                                ctx.lineWidth = 2;
+                                ctx.lineTo(xaxis.getPixelForValue(undefined, index), yaxis.bottom);
+                                ctx.stroke();
+                                ctx.restore();
+                            }   
+                        }
+                    }
+                }
+            },
+            setHoverStyle: function(element) {
+                originalLineDraw.apply(this, arguments);
+
+                var chart = this.chart;
+                var ctx = chart.chart.ctx;
+
+                var entryAndExitDates = chart.config.data.entryAndExitDates;
+                // console.log(entryAndExitDates);
+                if (entryAndExitDates) {
+                    for(var i = 0; i < entryAndExitDates.length; i++) {
+                        console.log("entryAndExitDates: " + entryAndExitDates[i]);
+                        var keys = Object.keys(entryAndExitDates[i]);
+                        // console.log(keys);
+                        // console.log("keys: " + typeof(keys));
+                        for(var keyIndex = 1; keyIndex < keys.length; keyIndex++) {
+                            if(entryAndExitDates[i][keys[keyIndex]].localeCompare("NULL") != 0) {
+                                var xaxis = chart.scales['x-axis-0'];
+                                var yaxis = chart.scales['y-axis-0'];
+                                // console.log('entryAndExitDates[i][keys[keyIndex]]: ' + entryAndExitDates[i][keys[keyIndex]]);
+                                var index = indexData.indexOf(entryAndExitDates[i][keys[keyIndex]]);
+                                ctx.save();
+                                ctx.beginPath();
+                                ctx.moveTo(xaxis.getPixelForValue(undefined, index), yaxis.top);
+                                ctx.strokeStyle = '#00ff00';
+                                ctx.lineWidth = 2;
+                                ctx.lineTo(xaxis.getPixelForValue(undefined, index), yaxis.bottom);
+                                ctx.stroke();
+                                ctx.restore();
+                            }   
+                        }
+                    }
+                }
+            },
+        });
+        
         // Animations initialization
         new WOW().init();
         var ctx = document.getElementById("myChart").getContext('2d');
@@ -368,7 +438,8 @@
                     borderWidth: 1.5,
                     pointRadius: 0,
                     pointHoverRadius: 1
-                }]
+                }],
+                entryAndExitDates: entryAndExitDates
             },
             options: {
                 legend: {
@@ -405,7 +476,7 @@
                 },
 
             }   
-        }); //disregard this 
+        });
 
         // var scrollbar = document.querySelector('.scrollbar');
         // var ps = new PerfectScrollbar(scrollbar); 
