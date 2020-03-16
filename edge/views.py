@@ -11,8 +11,7 @@ from dateutil.relativedelta import relativedelta
 
 
 from .models import Pitch, Member, Document
-from .analysis import AIFNAVDataForTemplate, AIFIndexDataForTemplate, get_current_price, securities_year_to_date_return, portfolio_year_to_date_return, security_total_return, portfolio_one_year_return, one_year_risk_adjusted_return_from_NAV, one_year_risk_adjusted_return_from_securities
-
+from .analysis import *
 
 def dashboard(request):
     template_name = 'edge/dashboard.html'
@@ -33,8 +32,20 @@ def dashboard(request):
     	'recent_pitches': recent_pitches,
         'portfolio_year_to_date_return': portfolio_year_to_date_return(),
         'one_year_risk_adjusted_return_from_NAV': one_year_risk_adjusted_return_from_NAV(threeFactor=True),
-        'AIFNAVDataForTemplate': AIFNAVDataForTemplate(),
-        'AIFIndexDataForTemplate': AIFIndexDataForTemplate(),
+        'aif_nav_data_for_template_5D': aif_nav_data_for_template_5D(),
+        'aif_index_data_for_template_5D': aif_index_data_for_template_5D(),
+        'aif_nav_data_for_template_1M': aif_nav_data_for_template_1M(),
+        'aif_index_data_for_template_1M': aif_index_data_for_template_1M(),
+        'aif_nav_data_for_template_3M': aif_nav_data_for_template_3M(),
+        'aif_index_data_for_template_3M': aif_index_data_for_template_3M(),
+        'aif_nav_data_for_template_6M': aif_nav_data_for_template_6M(),
+        'aif_index_data_for_template_6M': aif_index_data_for_template_6M(),
+        'aif_nav_data_for_template_1Y': aif_nav_data_for_template_1Y(),
+        'aif_index_data_for_template_1Y': aif_index_data_for_template_1Y(),
+        'aif_nav_data_for_template_5Y': aif_nav_data_for_template_5Y(),
+        'aif_index_data_for_template_5Y': aif_index_data_for_template_5Y(),
+        'aif_nav_data_for_template_all': aif_nav_data_for_template_all(),
+        'aif_index_data_for_template_all': aif_index_data_for_template_all(),
         'entry_and_exit_dates': entry_and_exit_dates
 
     }

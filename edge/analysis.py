@@ -51,17 +51,199 @@ def getAIFData():
 
 aifNAVdata = getAIFData()
 
-def AIFNAVDataForTemplate():
+def aif_nav_data_for_template_5D():
+	endDate = aifNAVdata.index[len(aifNAVdata) - 1]
+	startDate = endDate - relativedelta(days=5)
+	while(startDate.weekday() > 4 or startDate in holidays.US(years=startDate.year)):
+	  	startDate = startDate - datetime.timedelta(days=1)
+
+	print(aifNAVdata.loc[startDate.strftime('%Y-%m-%d')])
+	print(aifNAVdata.loc[endDate.strftime('%Y-%m-%d')])
+	navs = aifNAVdata.loc[startDate.strftime('%Y-%m-%d'):endDate.strftime('%Y-%m-%d')]
+	# print(len(navs.values.flatten().tolist()))
+	# print(navs)
+	# print(json.dumps(navs.values.flatten().tolist()))
+	return json.dumps(navs.values.flatten().tolist())
+
+def aif_index_data_for_template_5D():
+	endDate = aifNAVdata.index[len(aifNAVdata) - 1]
+	startDate = endDate - relativedelta(days=5)
+	while(startDate.weekday() > 4 or startDate in holidays.US(years=startDate.year)):
+	  	startDate = startDate - datetime.timedelta(days=1)
+
+	print(aifNAVdata.loc[startDate.strftime('%Y-%m-%d')])
+	print(aifNAVdata.loc[endDate.strftime('%Y-%m-%d')])
+	navs = aifNAVdata.loc[startDate.strftime('%Y-%m-%d'):endDate.strftime('%Y-%m-%d')]
+	print(navs)
+	index = pd.Series(navs.index).map(lambda x : x.strftime('%m-%d-%Y'))
+	# print(index.values.tolist())
+	# print(json.dumps(index.values.tolist()))
+	# print(len(index.values.tolist()))
+	return json.dumps(index.values.tolist())
+
+def aif_nav_data_for_template_1M():
+	endDate = aifNAVdata.index[len(aifNAVdata) - 1]
+	startDate = endDate - relativedelta(months=1)
+	while(startDate.weekday() > 4 or startDate in holidays.US(years=startDate.year)):
+	  	startDate = startDate - datetime.timedelta(days=1)
+
+	print(aifNAVdata.loc[startDate.strftime('%Y-%m-%d')])
+	print(aifNAVdata.loc[endDate.strftime('%Y-%m-%d')])
+	navs = aifNAVdata.loc[startDate.strftime('%Y-%m-%d'):endDate.strftime('%Y-%m-%d')]
+	# print(len(navs.values.flatten().tolist()))
+	# print(navs)
+	# print(json.dumps(navs.values.flatten().tolist()))
+	return json.dumps(navs.values.flatten().tolist())
+
+def aif_index_data_for_template_1M():
+	endDate = aifNAVdata.index[len(aifNAVdata) - 1]
+	startDate = endDate - relativedelta(months=1)
+	while(startDate.weekday() > 4 or startDate in holidays.US(years=startDate.year)):
+	  	startDate = startDate - datetime.timedelta(days=1)
+
+	print(aifNAVdata.loc[startDate.strftime('%Y-%m-%d')])
+	print(aifNAVdata.loc[endDate.strftime('%Y-%m-%d')])
+	navs = aifNAVdata.loc[startDate.strftime('%Y-%m-%d'):endDate.strftime('%Y-%m-%d')]
+	print(navs)
+	index = pd.Series(navs.index).map(lambda x : x.strftime('%m-%d-%Y'))
+	# print(index.values.tolist())
+	# print(json.dumps(index.values.tolist()))
+	# print(len(index.values.tolist()))
+	return json.dumps(index.values.tolist())
+
+def aif_nav_data_for_template_3M():
+	endDate = aifNAVdata.index[len(aifNAVdata) - 1]
+	startDate = endDate - relativedelta(months=3)
+	while(startDate.weekday() > 4 or startDate in holidays.US(years=startDate.year)):
+	  	startDate = startDate - datetime.timedelta(days=1)
+
+	print(aifNAVdata.loc[startDate.strftime('%Y-%m-%d')])
+	print(aifNAVdata.loc[endDate.strftime('%Y-%m-%d')])
+	navs = aifNAVdata.loc[startDate.strftime('%Y-%m-%d'):endDate.strftime('%Y-%m-%d')]
+	# print(len(navs.values.flatten().tolist()))
+	# print(navs)
+	# print(json.dumps(navs.values.flatten().tolist()))
+	return json.dumps(navs.values.flatten().tolist())
+
+def aif_index_data_for_template_3M():
+	endDate = aifNAVdata.index[len(aifNAVdata) - 1]
+	startDate = endDate - relativedelta(months=3)
+	while(startDate.weekday() > 4 or startDate in holidays.US(years=startDate.year)):
+	  	startDate = startDate - datetime.timedelta(days=1)
+
+	print(aifNAVdata.loc[startDate.strftime('%Y-%m-%d')])
+	print(aifNAVdata.loc[endDate.strftime('%Y-%m-%d')])
+	navs = aifNAVdata.loc[startDate.strftime('%Y-%m-%d'):endDate.strftime('%Y-%m-%d')]
+	print(navs)
+	index = pd.Series(navs.index).map(lambda x : x.strftime('%m-%d-%Y'))
+	# print(index.values.tolist())
+	# print(json.dumps(index.values.tolist()))
+	# print(len(index.values.tolist()))
+	return json.dumps(index.values.tolist())
+
+def aif_nav_data_for_template_6M():
+	endDate = aifNAVdata.index[len(aifNAVdata) - 1]
+	startDate = endDate - relativedelta(months=6)
+	while(startDate.weekday() > 4 or startDate in holidays.US(years=startDate.year)):
+	  	startDate = startDate - datetime.timedelta(days=1)
+
+	print(aifNAVdata.loc[startDate.strftime('%Y-%m-%d')])
+	print(aifNAVdata.loc[endDate.strftime('%Y-%m-%d')])
+	navs = aifNAVdata.loc[startDate.strftime('%Y-%m-%d'):endDate.strftime('%Y-%m-%d')]
+	# print(len(navs.values.flatten().tolist()))
+	# print(navs)
+	# print(json.dumps(navs.values.flatten().tolist()))
+	return json.dumps(navs.values.flatten().tolist())
+
+def aif_index_data_for_template_6M():
+	endDate = aifNAVdata.index[len(aifNAVdata) - 1]
+	startDate = endDate - relativedelta(months=6)
+	while(startDate.weekday() > 4 or startDate in holidays.US(years=startDate.year)):
+	  	startDate = startDate - datetime.timedelta(days=1)
+
+	print(aifNAVdata.loc[startDate.strftime('%Y-%m-%d')])
+	print(aifNAVdata.loc[endDate.strftime('%Y-%m-%d')])
+	navs = aifNAVdata.loc[startDate.strftime('%Y-%m-%d'):endDate.strftime('%Y-%m-%d')]
+	print(navs)
+	index = pd.Series(navs.index).map(lambda x : x.strftime('%m-%d-%Y'))
+	# print(index.values.tolist())
+	# print(json.dumps(index.values.tolist()))
+	# print(len(index.values.tolist()))
+	return json.dumps(index.values.tolist())
+
+def aif_nav_data_for_template_1Y():
+	endDate = aifNAVdata.index[len(aifNAVdata) - 1]
+	startDate = endDate - relativedelta(years=1)
+	while(startDate.weekday() > 4 or startDate in holidays.US(years=startDate.year)):
+	  	startDate = startDate - datetime.timedelta(days=1)
+
+	print(aifNAVdata.loc[startDate.strftime('%Y-%m-%d')])
+	print(aifNAVdata.loc[endDate.strftime('%Y-%m-%d')])
+	navs = aifNAVdata.loc[startDate.strftime('%Y-%m-%d'):endDate.strftime('%Y-%m-%d')]
+	# print(len(navs.values.flatten().tolist()))
+	# print(navs)
+	# print(json.dumps(navs.values.flatten().tolist()))
+	return json.dumps(navs.values.flatten().tolist())
+
+def aif_index_data_for_template_1Y():
+	endDate = aifNAVdata.index[len(aifNAVdata) - 1]
+	startDate = endDate - relativedelta(years=1)
+	while(startDate.weekday() > 4 or startDate in holidays.US(years=startDate.year)):
+	  	startDate = startDate - datetime.timedelta(days=1)
+
+	print(aifNAVdata.loc[startDate.strftime('%Y-%m-%d')])
+	print(aifNAVdata.loc[endDate.strftime('%Y-%m-%d')])
+	navs = aifNAVdata.loc[startDate.strftime('%Y-%m-%d'):endDate.strftime('%Y-%m-%d')]
+	print(navs)
+	index = pd.Series(navs.index).map(lambda x : x.strftime('%m-%d-%Y'))
+	# print(index.values.tolist())
+	# print(json.dumps(index.values.tolist()))
+	# print(len(index.values.tolist()))
+	return json.dumps(index.values.tolist())
+
+def aif_nav_data_for_template_5Y():
+	endDate = aifNAVdata.index[len(aifNAVdata) - 1]
+	startDate = endDate - relativedelta(years=5)
+	while(startDate.weekday() > 4 or startDate in holidays.US(years=startDate.year)):
+	  	startDate = startDate - datetime.timedelta(days=1)
+
+	print(aifNAVdata.loc[startDate.strftime('%Y-%m-%d')])
+	print(aifNAVdata.loc[endDate.strftime('%Y-%m-%d')])
+	navs = aifNAVdata.loc[startDate.strftime('%Y-%m-%d'):endDate.strftime('%Y-%m-%d')]
+	# print(len(navs.values.flatten().tolist()))
+	# print(navs)
+	# print(json.dumps(navs.values.flatten().tolist()))
+	return json.dumps(navs.values.flatten().tolist())
+
+def aif_index_data_for_template_5Y():
+	endDate = aifNAVdata.index[len(aifNAVdata) - 1]
+	startDate = endDate - relativedelta(years=5)
+	while(startDate.weekday() > 4 or startDate in holidays.US(years=startDate.year)):
+	  	startDate = startDate - datetime.timedelta(days=1)
+
+	print(aifNAVdata.loc[startDate.strftime('%Y-%m-%d')])
+	print(aifNAVdata.loc[endDate.strftime('%Y-%m-%d')])
+	navs = aifNAVdata.loc[startDate.strftime('%Y-%m-%d'):endDate.strftime('%Y-%m-%d')]
+	print(navs)
+	index = pd.Series(navs.index).map(lambda x : x.strftime('%m-%d-%Y'))
+	# print(index.values.tolist())
+	# print(json.dumps(index.values.tolist()))
+	# print(len(index.values.tolist()))
+	return json.dumps(index.values.tolist())
+
+def aif_nav_data_for_template_all():
 	# print(len(aifNAVdata.values.flatten().tolist()))
 	return json.dumps(aifNAVdata.values.flatten().tolist())
 
-def AIFIndexDataForTemplate():
+def aif_index_data_for_template_all():
 	# print(aifNAVdata.index)
 	index = pd.Series(aifNAVdata.index).map(lambda x : x.strftime('%m-%d-%Y'))
 	# print(index.values.tolist())
 	# print(json.dumps(index.values.tolist()))
 	# print(len(index.values.tolist()))
 	return json.dumps(index.values.tolist())
+
+
 
 def get_current_price(securities):
 	eastern = timezone('US/Eastern')
@@ -294,4 +476,6 @@ def one_year_risk_adjusted_return_from_securities(threeFactor, securities, weigh
 # security_total_return(securities=['HXL'], entry_price=75.35, entry_date="2020-01-03", exit_price=78.18, exit_date="2020-01-17")
 # security_total_return(securities=['HXL'], entry_price=75.35, entry_date="2020-01-03", exit_price=None, exit_date=datetime.datetime.today().strftime('%Y-%m-%d'))
 # getAIFData()
-get_current_price(['HXL'])
+# get_current_price(['HXL'])
+aif_nav_data_for_template_1Y()
+aif_index_data_for_template_1Y()
