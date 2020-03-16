@@ -129,7 +129,15 @@
                           {% endfor %}
                       </td>
                       <td>{{ pitch.pitch_price }}</td>
-                      <td>{{ pitch.pitch_price }}</td>
+                      {% for key, value in tickers_and_current_prices.items %}
+
+                            {% ifequal key pitch.stock_ticker%}
+
+                            <td>{{ value }}</td>
+
+                            {% endifequal %}
+                      {% endfor %}
+
                       <td>{{ pitch.investment_entered }}</td>
                       <td>{{ pitch.currently_invested }}</td>
                     </tr>                    

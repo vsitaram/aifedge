@@ -11,7 +11,7 @@ from dateutil.relativedelta import relativedelta
 
 
 from .models import Pitch, Member, Document
-from .analysis import AIFNAVDataForTemplate, AIFIndexDataForTemplate, securities_year_to_date_return, portfolio_year_to_date_return, security_total_return, portfolio_one_year_return, one_year_risk_adjusted_return_from_NAV, one_year_risk_adjusted_return_from_securities
+from .analysis import AIFNAVDataForTemplate, AIFIndexDataForTemplate, get_current_price, securities_year_to_date_return, portfolio_year_to_date_return, security_total_return, portfolio_one_year_return, one_year_risk_adjusted_return_from_NAV, one_year_risk_adjusted_return_from_securities
 
 
 def dashboard(request):
@@ -46,8 +46,10 @@ def dashboard(request):
 def pitches(request):
     template_name = 'edge/pitches.html'
     pitch_list = Pitch.objects.all()
+    tickers_and_current_prices = {pitch.stock_ticker: get_current_price([pitch.stock_ticker]) for pitch in pitch_list}
     context = {
-    	'pitch_list': pitch_list
+    	'pitch_list': pitch_list,
+        'tickers_and_current_prices': tickers_and_current_prices
     }
     return render(request, template_name, context)
 

@@ -63,6 +63,25 @@ def AIFIndexDataForTemplate():
 	# print(len(index.values.tolist()))
 	return json.dumps(index.values.tolist())
 
+def get_current_price(securities):
+	eastern = timezone('US/Eastern')
+	endDate = datetime.datetime.now(eastern)
+	
+	beforeMondayDayEnd = endDate.hour < 17 and endDate.weekday() == 0
+	if beforeMondayDayEnd:
+		endDate = datetime.datetime.today() - datetime.timedelta(days=1)
+
+	while(endDate.weekday() > 4 or endDate in holidays.US(years=endDate.year)):
+		print(endDate)
+		endDate = endDate - datetime.timedelta(days=1)
+	endEndDate = endDate + datetime.timedelta(days=1)
+
+	end = pdr.get_data_yahoo(securities, start=endDate.strftime('%Y-%m-%d'), end=endEndDate.strftime('%Y-%m-%d'),  as_panel = False, auto_adjust=False)
+	ret = end['Adj Close'][0]
+	print("get_current_price: " + str(ret))
+	return round(ret, 2)
+
+
 def get_daily_returns_df(prices):
     return ((prices / prices.shift(1) - 1).dropna())
 
@@ -267,7 +286,7 @@ def one_year_risk_adjusted_return_from_securities(threeFactor, securities, weigh
 # portfolio_year_to_date_return()
 # portfolio_total_return(datetime.datetime.strptime('2019-12-31', '%Y-%m-%d'), datetime.datetime.strptime('2020-02-07', '%Y-%m-%d'))
 # portfolio_total_return(datetime.datetime.strptime('2020-02-03', '%Y-%m-%d'), datetime.datetime.strptime('2020-02-07', '%Y-%m-%d'))
-one_year_risk_adjusted_return_from_NAV(True)
+# one_year_risk_adjusted_return_from_NAV(True)
 # AIFIndexDataForTemplate()
 # AIFNAVDataForTemplate()
 # security_total_return(securities=['HXL'], entry_price=None, entry_date="2020-01-03", exit_price=None, exit_date="2020-01-17")
@@ -275,3 +294,4 @@ one_year_risk_adjusted_return_from_NAV(True)
 # security_total_return(securities=['HXL'], entry_price=75.35, entry_date="2020-01-03", exit_price=78.18, exit_date="2020-01-17")
 # security_total_return(securities=['HXL'], entry_price=75.35, entry_date="2020-01-03", exit_price=None, exit_date=datetime.datetime.today().strftime('%Y-%m-%d'))
 # getAIFData()
+get_current_price(['HXL'])
