@@ -51,6 +51,20 @@ def getAIFData():
 
 aifNAVdata = getAIFData()
 
+def dashboard_as_of():
+	# print(aifNAVdata.index[-1].strftime('%m-%d-%Y'))
+	return aifNAVdata.index[-1].strftime('%m-%d-%Y')
+
+def pitch_as_of():
+	eastern = timezone('US/Eastern')
+	endDate = datetime.datetime.now(eastern)
+	
+	beforeMondayDayEnd = endDate.hour < 17 and endDate.weekday() == 0
+	if beforeMondayDayEnd:
+		endDate = datetime.datetime.today() - datetime.timedelta(days=1)
+	# print(aifNAVdata.index[-1].strftime('%m-%d-%Y'))
+	return endDate.strftime('%m-%d-%Y')
+
 def aif_nav_data_for_template_5D():
 	endDate = aifNAVdata.index[len(aifNAVdata) - 1]
 	startDate = endDate - relativedelta(days=5)
@@ -388,24 +402,24 @@ def one_year_risk_adjusted_return_from_NAV(threeFactor):
 	startDate = last_index - relativedelta(years=1)
 	while(startDate.weekday() > 4 or startDate in holidays.US(years=startDate.year)):
 	  	startDate = startDate - datetime.timedelta(days=1)
-	print(startDate)
-	print(endDate)
+	# print("one_year_risk_adjusted_return_from_NAV startDate: " + str(startDate))
+	# print("one_year_risk_adjusted_return_from_NAV Date: " + str(endDate))
 
 	dailyPortfolioReturns = get_daily_returns_df(aifNAVdata[startDate.strftime('%Y-%m-%d'):endDate.strftime('%Y-%m-%d')])
 	dailyPortfolioReturns = pd.DataFrame(dailyPortfolioReturns.values, columns=["Daily Portfolio Returns"], index=dailyPortfolioReturns.index) * 100
 	# print(dailyPortfolioReturns)
 	dfjoin = dailyFactorDF.join(dailyPortfolioReturns).dropna()
-	print(dfjoin)
+	# print(dfjoin)
 	portfolioExcessReturns = pd.DataFrame(dfjoin['Daily Portfolio Returns'].values - dfjoin['RF'].values, columns=['RP-RF'], index=dfjoin.index.values.flatten())
 	# print(portfolioExcessReturns)
 	dfjoin = dfjoin.join(portfolioExcessReturns).drop(columns=['Daily Portfolio Returns', 'RF'])
-	print(dfjoin)
+	# print(dfjoin)
 	if threeFactor:
 		factors = dfjoin.columns.tolist()[0:3]
 	else:
 		factors = dfjoin.columns.tolist()[0:5]
 
-	print(factors)
+	# print(factors)
 	X = dfjoin[factors] 
 	Y = dfjoin['RP-RF']
 	# print(X)
@@ -477,5 +491,5 @@ def one_year_risk_adjusted_return_from_securities(threeFactor, securities, weigh
 # security_total_return(securities=['HXL'], entry_price=75.35, entry_date="2020-01-03", exit_price=None, exit_date=datetime.datetime.today().strftime('%Y-%m-%d'))
 # getAIFData()
 # get_current_price(['HXL'])
-aif_nav_data_for_template_1Y()
-aif_index_data_for_template_1Y()
+# aif_nav_data_for_template_1Y()
+# aif_index_data_for_template_1Y()

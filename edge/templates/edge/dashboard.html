@@ -109,7 +109,9 @@
                         <!-- Title -->
                         <h2 class="text-center pb-3 h3-reponsive">Net Asset Value</h2>
 
-                        <canvas id="myChart"></canvas>
+                        <div id="chart_container">
+                            <canvas id="myChart"></canvas>                            
+                        </div>
 
                         <div class="row d-flex justify-content-center mt-2">
                             <div class="col-5" id="time_window">
@@ -143,10 +145,11 @@
             </section>
             
 
-            <hr class="my-5 stylish-color-dark">
+            <hr class="mt-5 mb-0 stylish-color-dark">
 
             <!--Section: Financial Metrics-->
             <section>
+                <p class="text-right text-white text-muted mt-0 mb-5" style="font-size: 12px;" id="returns_as_of">As of {{ dashboard_as_of }}</p>
                 <!--Grid row-->
                 <div class="row wow fadeIn text-center">
                     <!--Grid column-->
@@ -185,7 +188,7 @@
                                 <td class="align-middle">
                                     <div>
                                         <h3 class="my-0">{{ one_year_risk_adjusted_return_from_NAV }}</h3>
-                                        <p class="my-0">1-Year Risk-Adjusted Return</p>
+                                        <p class="my-0">1-Year Risk-Adjusted Return*</p>
                                     </div>
                                 </td>
                             </table>
@@ -193,9 +196,11 @@
                     </div>
                 </div>
 
+                <p class="text-right text-white text-muted my-0" style="font-size: 12px;" id="returns_as_of">*3-Factor Risk Adjusted Return</p>
+
             </section>
 
-            <hr class="my-5 stylish-color-dark">
+            <hr class="mb-5 mt-0 stylish-color-dark">
 
             <!--Section: Cards-->
             <section class="wow fadeIn">
@@ -410,7 +415,6 @@
         // console.log(indexDataString);
         var indexDataAll = indexDataAllString.slice(7, indexDataAllString.length-7).split("&quot;, &quot;");
         // console.log(indexData);
-
         
 
         var entryAndExitDatesString = "{{ entry_and_exit_dates }}"
@@ -482,6 +486,37 @@
             },
         }); 
         
+        $(window).ready( function() {
+            // alert($(window).width());
+            if( $(window).width() < 576 ) {
+                // alert($(window).width());
+                myChart.options.maintainAspectRatio = false;
+                myChart.update();
+                var chart_container = document.getElementById("chart_container");
+                chart_container.style.height = "360px";
+
+                var timeWindow = document.getElementById("time_window");
+                var classNames = timeWindow.getAttribute("class");
+                console.log(classNames);
+                var classArr = classNames.split(" ");
+                classArr[0] = "col-11";
+                // classArr[1] = "ml-2";
+                newClasses = classArr.join(" ");
+                timeWindow.setAttribute("class", newClasses);                
+            }
+            else if( $(window).width() <= 768 ) {
+                // alert($(window).width());
+                
+                var timeWindow = document.getElementById("time_window");
+                var classNames = timeWindow.getAttribute("class");
+                console.log(classNames);
+                var classArr = classNames.split(" ");
+                classArr[0] = "col-8";
+                // classArr.push("pl-4");
+                newClasses = classArr.join(" ");
+                timeWindow.setAttribute("class", newClasses);                
+            }
+        }); 
 
         // Animations initialization
         new WOW().init();
@@ -490,11 +525,11 @@
         var myChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: indexDataAll,
+                labels: indexData1Y,
                 // labels: Array.from({length: 2127}, () => Math.floor(Math.random() * 20000).toString()),
                 datasets: [{
                     label: 'NAV',
-                    data: navDataAll,
+                    data: navData1Y,
                     backgroundColor: [
                         'rgba(54, 162, 235, 0.2)',
                     ],
@@ -511,6 +546,7 @@
                 legend: {
                     display: false
                 },
+                maintainAspectRatio: true,
                 scales: {
                     xAxes: [{
                         ticks: {
@@ -547,34 +583,7 @@
             }   
         });
 
-        $(window).ready( function() {
-            // alert($(window).width());
-            if( $(window).width() < 576 ) {
-                // alert($(window).width());
-                var timeWindow = document.getElementById("time_window");
-                var classNames = timeWindow.getAttribute("class");
-                console.log(classNames);
-                var classArr = classNames.split(" ");
-                classArr[0] = "col-11";
-                // classArr[1] = "ml-2";
-                newClasses = classArr.join(" ");
-                timeWindow.setAttribute("class", newClasses);                
-            }
-            else if( $(window).width() <= 768 ) {
-                alert($(window).width());
-                // var chart = document.getElementById("myChart");
-                // chart.setAttribute("height", 300);
-
-                var timeWindow = document.getElementById("time_window");
-                var classNames = timeWindow.getAttribute("class");
-                console.log(classNames);
-                var classArr = classNames.split(" ");
-                classArr[0] = "col-8";
-                // classArr.push("pl-4");
-                newClasses = classArr.join(" ");
-                timeWindow.setAttribute("class", newClasses);                
-            }
-        }); 
+        
 
         var currentTimeWindowSelectedID = 'time_window_1Y';
 
@@ -767,9 +776,6 @@
             currentTimeWindowSelectedID = "time_window_ALL";
         });
         
-
-        // var scrollbar = document.querySelector('.scrollbar');
-        // var ps = new PerfectScrollbar(scrollbar); 
     </script>
 </body>
 

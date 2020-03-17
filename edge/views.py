@@ -30,6 +30,7 @@ def dashboard(request):
     context = {
     	'current_holdings': current_holdings,
     	'recent_pitches': recent_pitches,
+        'dashboard_as_of': dashboard_as_of(),
         'portfolio_year_to_date_return': portfolio_year_to_date_return(),
         'one_year_risk_adjusted_return_from_NAV': one_year_risk_adjusted_return_from_NAV(threeFactor=True),
         'aif_nav_data_for_template_5D': aif_nav_data_for_template_5D(),
@@ -50,7 +51,7 @@ def dashboard(request):
 
     }
     
-    context['portfolio_one_year_return'] = portfolio_one_year_return() #1 year
+    context['portfolio_one_year_return'] = portfolio_one_year_return()
     return render(request, template_name, context)
 
 @login_required
@@ -72,6 +73,7 @@ def pitch(request, pitch_id):
     context = {
     	'pitch' : pitch,
         'documents': documents,
+        'pitch_as_of': pitch_as_of(),
         'return_since_pitch': security_total_return(securities=[pitch.stock_ticker], entry_price=pitch.pitch_price, entry_date=pitch.pitch_date, exit_price=None, exit_date=datetime.datetime.today().strftime('%Y-%m-%d')),
 
     }
