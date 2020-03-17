@@ -1,1 +1,1 @@
-web: gunicorn aifedge.wsgi --log-file -
+web: gunicorn --timeout 120 aifedge.wsgi --log-file -
