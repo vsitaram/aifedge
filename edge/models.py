@@ -20,7 +20,7 @@ class Pitch(models.Model):
     investment_strategy = models.CharField(max_length=4, choices=[("RV", "Relative Value"), ("SSG", "Special Situations"), ("GM", "Global Macro"), ("Risk", "Risk")], default="RV")
     investment_entered = models.BooleanField(default=False)
     pitch_price = models.FloatField(default=0.0)
-    target_price = models.FloatField(default=0.0, null=True, blank=True)
+    target_price = models.FloatField(null=True, blank=True, default=0.0,)
     entry_date = models.DateField(null=True, blank=True)
     entry_price = models.FloatField(null=True, blank=True)
     exit_date = models.DateField(null=True, blank=True)
