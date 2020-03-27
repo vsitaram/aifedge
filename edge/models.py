@@ -10,6 +10,7 @@ class Member(models.Model):
 
 class Pitch(models.Model):
     title = models.CharField(max_length=200)
+    long_investment = models.BooleanField(default=False)
     stock_exchange_abbreviation = models.CharField('Stock Exchange Abbreviation', max_length=30, default="NYSE")
     stock_ticker = models.CharField(max_length=30, default="AAPL")
     pitch_date = models.DateField("Date Pitched")
@@ -19,6 +20,7 @@ class Pitch(models.Model):
     investment_strategy = models.CharField(max_length=4, choices=[("RV", "Relative Value"), ("SSG", "Special Situations"), ("GM", "Global Macro"), ("Risk", "Risk")], default="RV")
     investment_entered = models.BooleanField(default=False)
     pitch_price = models.FloatField(default=0.0)
+    target_price = models.FloatField(default=0.0, null=True, blank=True)
     entry_date = models.DateField(null=True, blank=True)
     entry_price = models.FloatField(null=True, blank=True)
     exit_date = models.DateField(null=True, blank=True)
@@ -32,6 +34,7 @@ class Pitch(models.Model):
     reasons_for_weight = models.TextField(default="No Reasons for Weight")
     threats_downsides = models.TextField(default="No Threats")
     other_notes = models.TextField(default="No Other Notes")
+    exit_notes = models.TextField(null=True, blank=True, default="No Exit Notes")
 
     def __str__(self):
         return self.title
