@@ -127,8 +127,12 @@
 
                                 <p class="card-text text-white">Pitch Price: ${{ pitch.pitch_price }}</p>
 
-                                <p class="card-text text-white">Target Price: ${{ pitch.target_price }}</p>
+                                {% if pitch.target_price %}
 
+                                    <p class="card-text text-white">Target Price: ${{ pitch.target_price }}</p>
+
+                                {% endif %}
+                                
                                 {% if pitch.investment_entered and pitch.currently_invested %}
                                     <p class="card-text text-white">Investment Entered</p>
                                     <p class="card-text text-white">Currently Invested</p>
