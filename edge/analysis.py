@@ -17,8 +17,8 @@ import json
 from pytz import timezone
 yf.pdr_override() # <== that's all it takes :-)
 
-from decouple import config
-import os
+# from decouple import config
+# import os
 from django.conf import settings
 
 zip_file_url ='https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/F-F_Research_Data_5_Factors_2x3_daily_CSV.zip'
@@ -347,28 +347,34 @@ def portfolio_year_to_date_return():
 def security_total_return(securities, entry_price, entry_date, exit_price, exit_date):
 	if (entry_price is None) or (exit_price is None):
 		if entry_price is None:
-			startDate = parser.parse(entry_date)
-			startEndDate = startDate + datetime.timedelta(days=1)
-			beg = pdr.get_data_yahoo(securities, start=startDate.strftime('%Y-%m-%d'), end=startEndDate.strftime('%Y-%m-%d'),  as_panel = False, auto_adjust=False)
-			entry_price = beg['Adj Close'][0]
+			if entry_date:
+				startDate = parser.parse(entry_date)
+				startEndDate = startDate + datetime.timedelta(days=1)
+				beg = pdr.get_data_yahoo(securities, start=startDate.strftime('%Y-%m-%d'), end=startEndDate.strftime('%Y-%m-%d'),  as_panel = False, auto_adjust=False)
+				entry_price = beg['Adj Close'][0]
+			else:
+				return None
 
 		if exit_price is None:
-			endDate = startDate = parser.parse(exit_date)
+			if exit_date:
+				endDate = startDate = parser.parse(exit_date)
 
-			eastern = timezone('US/Eastern')
-			now = datetime.datetime.now(eastern)
-			beforeMondayDayEnd = now.hour < 17 and now.weekday() == 0 and endDate.weekday() == 0
-			if beforeMondayDayEnd:
-				endDate = datetime.datetime.today() - datetime.timedelta(days=1)
+				eastern = timezone('US/Eastern')
+				now = datetime.datetime.now(eastern)
+				beforeMondayDayEnd = now.hour < 17 and now.weekday() == 0 and endDate.weekday() == 0
+				if beforeMondayDayEnd:
+					endDate = datetime.datetime.today() - datetime.timedelta(days=1)
 
-			while(endDate.weekday() > 4 or endDate in holidays.US(years=endDate.year)):
-				endDate = endDate - datetime.timedelta(days=1)
-			endEndDate = endDate + datetime.timedelta(days=1)
-			end = pdr.get_data_yahoo(securities, start=endDate.strftime('%Y-%m-%d'), end=endEndDate.strftime('%Y-%m-%d'),  as_panel = False, auto_adjust=False)
-			exit_price = end['Adj Close'][0]
-	print(entry_price)
-	print(exit_price)
-	print(exit_price/entry_price - 1)
+				while(endDate.weekday() > 4 or endDate in holidays.US(years=endDate.year)):
+					endDate = endDate - datetime.timedelta(days=1)
+				endEndDate = endDate + datetime.timedelta(days=1)
+				end = pdr.get_data_yahoo(securities, start=endDate.strftime('%Y-%m-%d'), end=endEndDate.strftime('%Y-%m-%d'),  as_panel = False, auto_adjust=False)
+				exit_price = end['Adj Close'][0]
+			else:
+				return None
+	# print(entry_price)
+	# print(exit_price)
+	# print(exit_price/entry_price - 1)
 	ret = (exit_price/entry_price - 1)
 	return '{:.1%}'.format(ret)
 	# allSecuritiesAllData = pdr.get_data_yahoo(securities, start=dateStart.strftime('%Y-%m-%d'), end=dateEnd.strftime('%Y-%m-%d'),  as_panel = False)
