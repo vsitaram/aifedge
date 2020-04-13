@@ -425,7 +425,7 @@ def one_year_risk_adjusted_return_from_NAV(threeFactor):
 	else:
 		factors = dfjoin.columns.tolist()[0:5]
 
-	# print(factors)
+	print(factors)
 	X = dfjoin[factors] 
 	Y = dfjoin['RP-RF']
 	# print(X)
@@ -470,6 +470,8 @@ def one_year_risk_adjusted_return_from_securities(threeFactor, securities, weigh
 		factors = dfjoin.columns.tolist()[0:-4]
 	else:
 		factors = dfjoin.columns.tolist()[0:-2]
+
+	print("factors: " + str(factors))
 
 	X = dfjoin[factors] 
 	Y = dfjoin['RP-RF']
