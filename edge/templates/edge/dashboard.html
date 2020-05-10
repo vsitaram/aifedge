@@ -563,7 +563,7 @@
                     }],
                     yAxes: [{
                         ticks: {
-                            beginAtZero: true
+                            // beginAtZero: true
                         }, 
                         scaleLabel: {
                             display: false,
@@ -606,6 +606,7 @@
             oldTimeWindow.setAttribute("class", newClasses);
 
             myChart.data.datasets[0].data = navData5D;
+            // config.yAxis.max = categoriesAndCounts[1][0] * 1.05
             myChart.data.labels = indexData5D;
             myChart.update();
 

@@ -1,5 +1,6 @@
 https://forums.aws.amazon.com/thread.jspa?threadID=170579
 https://testdriven.io/blog/storing-django-static-and-media-files-on-amazon-s3/
 https://docs.djangoproject.com/en/3.0/intro/
+https://stackoverflow.com/questions/51954332/unable-to-connect-to-server-postgresql-on-ubuntu-in-windows-subsystem-for-linux
 
 sudo apt-get install libpq-dev python3-dev
