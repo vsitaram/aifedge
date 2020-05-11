@@ -26,6 +26,7 @@ psycopg2 = "*"
 django-heroku = "*"
 holidays = "*"
 django-cleanup = "*"
+django-sslserver = "*"
 
 [requires]
 python_version = "3.6"
