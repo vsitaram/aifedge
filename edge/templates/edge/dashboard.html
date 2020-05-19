@@ -349,76 +349,7 @@
     <!-- MDB core JavaScript -->
     <script type="text/javascript" src="{% static 'edge/js/mdb.min.js' %}"></script>
     <!-- Initializations -->
-    <script type="text/javascript">
-
-        var navData5DString = "{{ aif_nav_data_for_template_5D }}";
-        // console.log(navDataString);
-        var navData5D = Array.from(navData5DString.slice(1, navData5DString.length-1).split(", "), x => parseInt(x));
-        // console.log(navData);
-        var indexData5DString = "{{ aif_index_data_for_template_5D }}";
-        // console.log(indexDataString);
-        var indexData5D = indexData5DString.slice(7, indexData5DString.length-7).split("&quot;, &quot;");
-        // console.log(indexData);
-
-        var navData1MString = "{{ aif_nav_data_for_template_1M }}";
-        // console.log(navDataString);
-        var navData1M = Array.from(navData1MString.slice(1, navData1MString.length-1).split(", "), x => parseInt(x));
-        // console.log(navData);
-        var indexData1MString = "{{ aif_index_data_for_template_1M }}";
-        // console.log(indexDataString);
-        var indexData1M = indexData1MString.slice(7, indexData1MString.length-7).split("&quot;, &quot;");
-        // console.log(indexData);
-
-        var navData3MString = "{{ aif_nav_data_for_template_3M }}";
-        // console.log(navDataString);
-        var navData3M = Array.from(navData3MString.slice(1, navData3MString.length-1).split(", "), x => parseInt(x));
-        // console.log(navData);
-        var indexData3MString = "{{ aif_index_data_for_template_3M }}";
-        // console.log(indexDataString);
-        var indexData3M = indexData3MString.slice(7, indexData3MString.length-7).split("&quot;, &quot;");
-        // console.log(indexData);
-
-        var navData6MString = "{{ aif_nav_data_for_template_6M }}";
-        // console.log(navDataString);
-        var navData6M = Array.from(navData6MString.slice(1, navData6MString.length-1).split(", "), x => parseInt(x));
-        // console.log(navData);
-        var indexData6MString = "{{ aif_index_data_for_template_6M }}";
-        // console.log(indexDataString);
-        var indexData6M = indexData6MString.slice(7, indexData6MString.length-7).split("&quot;, &quot;");
-        // console.log(indexData);
-
-        var navData1YString = "{{ aif_nav_data_for_template_1Y }}";
-        // console.log(navDataString);
-        var navData1Y = Array.from(navData1YString.slice(1, navData1YString.length-1).split(", "), x => parseInt(x));
-        // console.log(navData);
-        var indexData1YString = "{{ aif_index_data_for_template_1Y }}";
-        // console.log(indexDataString);
-        var indexData1Y = indexData1YString.slice(7, indexData1YString.length-7).split("&quot;, &quot;");
-        // console.log(indexData);
-
-        var navData5YString = "{{ aif_nav_data_for_template_5Y }}";
-        // console.log(navDataString);
-        var navData5Y = Array.from(navData5YString.slice(1, navData5YString.length-1).split(", "), x => parseInt(x));
-        // console.log(navData);
-        var indexData5YString = "{{ aif_index_data_for_template_5Y }}";
-        // console.log(indexDataString);
-        var indexData5Y = indexData5YString.slice(7, indexData5YString.length-7).split("&quot;, &quot;");
-        // console.log(indexData);
-
-        var navDataAllString = "{{ aif_nav_data_for_template_all }}";
-        // console.log(navDataString);
-        var navDataAll = Array.from(navDataAllString.slice(1, navDataAllString.length-1).split(", "), x => parseInt(x));
-        // console.log(navData);
-        var indexDataAllString = "{{ aif_index_data_for_template_all }}";
-        // console.log(indexDataString);
-        var indexDataAll = indexDataAllString.slice(7, indexDataAllString.length-7).split("&quot;, &quot;");
-        // console.log(indexData);
-        
-
-        var entryAndExitDatesString = "{{ entry_and_exit_dates }}"
-        // console.log(entryAndExitDatesString);
-        var entryAndExitDates = JSON.parse(entryAndExitDatesString.slice(0, entryAndExitDatesString.length).replace(/&#x27;/g, '\"'));
-        // console.log(entryAndExitDates);
+    <script type="text/javascript">        
 
         
         var originalLineDraw = Chart.controllers.line.prototype.draw;
@@ -428,39 +359,6 @@
 
                 var chart = this.chart;
                 var ctx = chart.ctx;
-
-                /*
-
-                var entryAndExitDates = chart.config.data.entryAndExitDates;
-                // console.log(entryAndExitDates);
-                if (entryAndExitDates) {
-                    for(var i = 0; i < entryAndExitDates.length; i++) {
-                        // console.log("entryAndExitDates: " + entryAndExitDates[i]);
-                        var keys = Object.keys(entryAndExitDates[i]);
-                        // console.log(keys);
-                        // console.log("keys: " + typeof(keys));
-                        for(var keyIndex = 1; keyIndex < keys.length; keyIndex++) {
-                            if(entryAndExitDates[i][keys[keyIndex]].localeCompare("NULL") != 0) {
-                                var xaxis = chart.scales['x-axis-0'];
-                                var yaxis = chart.scales['y-axis-0'];
-                                var topY = this.chart.legend.bottom;
-                                var bottomY = this.chart.chartArea.bottom;
-                                // console.log('entryAndExitDates[i][keys[keyIndex]]: ' + entryAndExitDates[i][keys[keyIndex]]);
-                                var index = indexData.indexOf(entryAndExitDates[i][keys[keyIndex]]);
-                                ctx.save();
-                                ctx.beginPath();
-                                ctx.moveTo(xaxis.getPixelForValue(undefined, index), topY);
-                                ctx.strokeStyle = '#ff0000';
-                                ctx.lineWidth = 2;
-                                ctx.lineTo(xaxis.getPixelForValue(undefined, index), bottomY);
-                                ctx.stroke();
-                                ctx.restore();
-                            }   
-                        }
-                    }
-                }
-
-                */
 
                 if (this.chart.tooltip._active && this.chart.tooltip._active.length) {
                     var activePoint = this.chart.tooltip._active[0],
@@ -484,12 +382,30 @@
             },
         }); 
         
+        
         $(window).ready( function() {
+            new WOW().init();
+            $.ajax({
+              // url : "https://onefigrapp.herokuapp.com/app/disciplines_list/",
+              url : "http://localhost:8000/edge/dashboard/1Y",
+              dataType: "json",
+              success : function (data) {
+                
+                console.log("1Y data");
+                console.log(data);
+                console.log(Object.keys(data));
+                setChart(data);
+                 
+              }
+            });
             // alert($(window).width());
+            
+        }); 
+
+        function adjustChartDimensions(config) {
             if( $(window).width() < 576 ) {
                 // alert($(window).width());
-                myChart.options.maintainAspectRatio = false;
-                myChart.update();
+                config.options.maintainAspectRatio = false;
                 var chart_container = document.getElementById("chart_container");
                 chart_container.style.height = "360px";
 
@@ -514,267 +430,141 @@
                 newClasses = classArr.join(" ");
                 timeWindow.setAttribute("class", newClasses);                
             }
-        }); 
+        }
 
-        // Animations initialization
-        new WOW().init();
-        var ctx = document.getElementById("myChart").getContext('2d');
+        function setChart(chartData) {
+            $('#myChart').remove(); // this is my <canvas> element
+            $('#chart_container').append('<canvas id="myChart"><canvas>');
+            var ctx = document.querySelector('#myChart').getContext('2d');
 
-        var myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: indexData1Y,
-                // labels: Array.from({length: 2127}, () => Math.floor(Math.random() * 20000).toString()),
-                datasets: [{
-                    label: 'NAV',
-                    data: navData1Y,
-                    backgroundColor: [
-                        'rgba(54, 162, 235, 0.2)',
-                    ],
-                    borderColor: [
-                        'rgba(54, 162, 235, 1)',
-                    ],
-                    borderWidth: 1.5,
-                    pointRadius: 0,
-                    pointHoverRadius: 1
-                }],
-                entryAndExitDates: entryAndExitDates
-            },
-            options: {
-                legend: {
-                    display: false
-                },
-                maintainAspectRatio: true,
-                scales: {
-                    xAxes: [{
-                        ticks: {
-                            major: {
-                                fontStyle: 'bold',
-                                fontColor: '#FF0000'
-                            }
-                        },
-                        scaleLabel: {
-                            display: false,
-                            labelString: 'Date',
-                            fontStyle: 'bold',
-                            fontColor: '#FFFFFF',
-                            fontSize: 16
-                        }
+            config = {
+                type: 'line',
+                data: {
+                    labels: Object.keys(chartData),
+                    // labels: Array.from({length: 2127}, () => Math.floor(Math.random() * 20000).toString()),
+                    datasets: [{
+                        label: 'NAV',
+                        data: Object.values(chartData),
+                        backgroundColor: [
+                            'rgba(54, 162, 235, 0.2)',
+                        ],
+                        borderColor: [
+                            'rgba(54, 162, 235, 1)',
+                        ],
+                        borderWidth: 1.5,
+                        pointRadius: 0,
+                        pointHoverRadius: 1
                     }],
-                    yAxes: [{
-                        ticks: {
-                            // beginAtZero: true
-                        }, 
-                        scaleLabel: {
-                            display: false,
-                            labelString: '',
-                            fontStyle: 'bold',
-                            fontColor: '#FFFFFF',
-                            fontSize: 16
-                        }
-                    }]
                 },
-                tooltips: {
-                    intersect: false
-                }
+                options: {
+                    legend: {
+                        display: false
+                    },
+                    maintainAspectRatio: true,
+                    scales: {
+                        xAxes: [{
+                            ticks: {
+                                major: {
+                                    fontStyle: 'bold',
+                                    fontColor: '#FF0000'
+                                }
+                            },
+                            scaleLabel: {
+                                display: false,
+                                labelString: 'Date',
+                                fontStyle: 'bold',
+                                fontColor: '#FFFFFF',
+                                fontSize: 16
+                            }
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                // beginAtZero: true
+                            }, 
+                            scaleLabel: {
+                                display: false,
+                                labelString: '',
+                                fontStyle: 'bold',
+                                fontColor: '#FFFFFF',
+                                fontSize: 16
+                            }
+                        }]
+                    },
+                    tooltips: {
+                        intersect: false
+                    }
 
-            }   
-        });
+                }   
+            };
+
+            adjustChartDimensions(config);
+            var myChart = new Chart(ctx, config);
+            
+        }
+
+        // Animations initialization       
 
         
-
         var currentTimeWindowSelectedID = 'time_window_1Y';
 
-        $('#time_window_5D').click( function() {
-            var timeWindow = document.getElementById("time_window_5D");
-            var classNames = timeWindow.getAttribute("class");
+        timeWindowIDsArr = ['time_window_5D', 'time_window_1M', 'time_window_3M', 'time_window_6M', 'time_window_1Y', 'time_window_5Y', 'time_window_ALL'];
+
+        function changeTimeHorizonFormat(timeWindow) {
+            console.log(timeWindow);
+            var timeWindowElement = document.getElementById(timeWindow);
+            console.log(timeWindowElement);
+            var classNames = timeWindowElement.getAttribute("class");
+            console.log(2);
             // console.log(classNames);
             var classArr = classNames.split(" ");
             classArr[3] = "text-white-50";
             // classArr.push("pl-4");
             newClasses = classArr.join(" ");
-            timeWindow.setAttribute("class", newClasses); 
-            timeWindow.innerHTML = "<u>" + timeWindow.innerHTML + "</u>";
-
-            var oldTimeWindow = document.getElementById(currentTimeWindowSelectedID);
-            oldTimeWindow.innerHTML = oldTimeWindow.innerHTML.slice(3, indexData5DString.length-4);
-            var classNames = oldTimeWindow.getAttribute("class");
+            timeWindowElement.setAttribute("class", newClasses); 
+            timeWindowElement.innerHTML = "<u>" + timeWindowElement.innerHTML + "</u>";
+            console.log(currentTimeWindowSelectedID);
+            var oldTimeWindowElement = document.getElementById(currentTimeWindowSelectedID);
+            oldTimeWindowElement.innerHTML = oldTimeWindowElement.innerHTML.slice(3, oldTimeWindowElement.innerHTML.length-4);
+            var classNames = oldTimeWindowElement.getAttribute("class");
             // console.log(classNames);
             var classArr = classNames.split(" ");
             classArr[3] = "text-info";
             newClasses = classArr.join(" ");
-            oldTimeWindow.setAttribute("class", newClasses);
+            oldTimeWindowElement.setAttribute("class", newClasses);
 
-            myChart.data.datasets[0].data = navData5D;
-            // config.yAxis.max = categoriesAndCounts[1][0] * 1.05
-            myChart.data.labels = indexData5D;
-            myChart.update();
+            currentTimeWindowSelectedID = timeWindow;
+        }
 
-            currentTimeWindowSelectedID = "time_window_5D";
-        });
-
-        $('#time_window_1M').click( function() {
-            var timeWindow = document.getElementById("time_window_1M");
-            var classNames = timeWindow.getAttribute("class");
-            // console.log(classNames);
-            var classArr = classNames.split(" ");
-            classArr[3] = "text-white-50";
-            // classArr.push("pl-4");
-            newClasses = classArr.join(" ");
-            timeWindow.setAttribute("class", newClasses); 
-            timeWindow.innerHTML = "<u>" + timeWindow.innerHTML + "</u>";
-
-            var oldTimeWindow = document.getElementById(currentTimeWindowSelectedID);
-            oldTimeWindow.innerHTML = oldTimeWindow.innerHTML.slice(3, indexData1MString.length-4);
-            var classNames = oldTimeWindow.getAttribute("class");
-            // console.log(classNames);
-            var classArr = classNames.split(" ");
-            classArr[3] = "text-info";
-            newClasses = classArr.join(" ");
-            oldTimeWindow.setAttribute("class", newClasses);
-
-            myChart.data.datasets[0].data = navData1M;
-            myChart.data.labels = indexData1M;
-            myChart.update();
-
-            currentTimeWindowSelectedID = "time_window_1M";
-        });
-
-        $('#time_window_3M').click( function() {
-            var timeWindow = document.getElementById("time_window_3M");
-            var classNames = timeWindow.getAttribute("class");
-            // console.log(classNames);
-            var classArr = classNames.split(" ");
-            classArr[3] = "text-white-50";
-            // classArr.push("pl-4");
-            newClasses = classArr.join(" ");
-            timeWindow.setAttribute("class", newClasses); 
-            timeWindow.innerHTML = "<u>" + timeWindow.innerHTML + "</u>";
-
-            var oldTimeWindow = document.getElementById(currentTimeWindowSelectedID);
-            oldTimeWindow.innerHTML = oldTimeWindow.innerHTML.slice(3, indexData3MString.length-4);
-            var classNames = oldTimeWindow.getAttribute("class");
-            // console.log(classNames);
-            var classArr = classNames.split(" ");
-            classArr[3] = "text-info";
-            newClasses = classArr.join(" ");
-            oldTimeWindow.setAttribute("class", newClasses);
-
-            myChart.data.datasets[0].data = navData3M;
-            myChart.data.labels = indexData3M;
-            myChart.update();
-
-            currentTimeWindowSelectedID = "time_window_3M";
-        });
-
-        $('#time_window_6M').click( function() {
-            var timeWindow = document.getElementById("time_window_6M");
-            var classNames = timeWindow.getAttribute("class");
-            // console.log(classNames);
-            var classArr = classNames.split(" ");
-            classArr[3] = "text-white-50";
-            // classArr.push("pl-4");
-            newClasses = classArr.join(" ");
-            timeWindow.setAttribute("class", newClasses); 
-            timeWindow.innerHTML = "<u>" + timeWindow.innerHTML + "</u>";
-
-            var oldTimeWindow = document.getElementById(currentTimeWindowSelectedID);
-            oldTimeWindow.innerHTML = oldTimeWindow.innerHTML.slice(3, indexData6MString.length-4);
-            var classNames = oldTimeWindow.getAttribute("class");
-            // console.log(classNames);
-            var classArr = classNames.split(" ");
-            classArr[3] = "text-info";
-            newClasses = classArr.join(" ");
-            oldTimeWindow.setAttribute("class", newClasses);
-
-            myChart.data.datasets[0].data = navData6M;
-            myChart.data.labels = indexData6M;
-            myChart.update();
-
-            currentTimeWindowSelectedID = "time_window_6M";
-        });
-
-        $('#time_window_1Y').click( function() {
-            var timeWindow = document.getElementById("time_window_1Y");
-            var classNames = timeWindow.getAttribute("class");
-            // console.log(classNames);
-            var classArr = classNames.split(" ");
-            classArr[3] = "text-white-50";
-            // classArr.push("pl-4");
-            newClasses = classArr.join(" ");
-            timeWindow.setAttribute("class", newClasses); 
-            timeWindow.innerHTML = "<u>" + timeWindow.innerHTML + "</u>";
-
-            var oldTimeWindow = document.getElementById(currentTimeWindowSelectedID);
-            oldTimeWindow.innerHTML = oldTimeWindow.innerHTML.slice(3, indexData1YString.length-4);
-            var classNames = oldTimeWindow.getAttribute("class");
-            // console.log(classNames);
-            var classArr = classNames.split(" ");
-            classArr[3] = "text-info";
-            newClasses = classArr.join(" ");
-            oldTimeWindow.setAttribute("class", newClasses);
-
-            myChart.data.datasets[0].data = navData1Y;
-            myChart.data.labels = indexData1Y;
-            myChart.update();
-
-            currentTimeWindowSelectedID = "time_window_1Y";
-        });
-
-        $('#time_window_5Y').click( function() {
-            var timeWindow = document.getElementById("time_window_5Y");
-            var classNames = timeWindow.getAttribute("class");
-            // console.log(classNames);
-            var classArr = classNames.split(" ");
-            classArr[3] = "text-white-50";
-            // classArr.push("pl-4");
-            newClasses = classArr.join(" ");
-            timeWindow.setAttribute("class", newClasses); 
-            timeWindow.innerHTML = "<u>" + timeWindow.innerHTML + "</u>";
-
-            var oldTimeWindow = document.getElementById(currentTimeWindowSelectedID);
-            oldTimeWindow.innerHTML = oldTimeWindow.innerHTML.slice(3, indexData5YString.length-4);
-            var classNames = oldTimeWindow.getAttribute("class");
-            // console.log(classNames);
-            var classArr = classNames.split(" ");
-            classArr[3] = "text-info";
-            newClasses = classArr.join(" ");
-            oldTimeWindow.setAttribute("class", newClasses);
-
-            myChart.data.datasets[0].data = navData5Y;
-            myChart.data.labels = indexData5Y;
-            myChart.update();
-
-            currentTimeWindowSelectedID = "time_window_5Y";
-        });
-
-        $('#time_window_ALL').click( function() {
-            var timeWindow = document.getElementById("time_window_ALL");
-            var classNames = timeWindow.getAttribute("class");
-            // console.log(classNames);
-            var classArr = classNames.split(" ");
-            classArr[3] = "text-white-50";
-            // classArr.push("pl-4");
-            newClasses = classArr.join(" ");
-            timeWindow.setAttribute("class", newClasses); 
-            timeWindow.innerHTML = "<u>" + timeWindow.innerHTML + "</u>";
-
-            var oldTimeWindow = document.getElementById(currentTimeWindowSelectedID);
-            oldTimeWindow.innerHTML = oldTimeWindow.innerHTML.slice(3, indexDataAllString.length-4);
-            var classNames = oldTimeWindow.getAttribute("class");
-            // console.log(classNames);
-            var classArr = classNames.split(" ");
-            classArr[3] = "text-info";
-            newClasses = classArr.join(" ");
-            oldTimeWindow.setAttribute("class", newClasses);
-
-            myChart.data.datasets[0].data = navDataAll;
-            myChart.data.labels = indexDataAll;
-            myChart.update();
-
-            currentTimeWindowSelectedID = "time_window_ALL";
-        });
         
+        for (var i = 0; i < timeWindowIDsArr.length; i++) {
+            
+            console.log(  $( "#" + timeWindowIDsArr[i] ).text() );
+            $("#" + timeWindowIDsArr[i]).click( function() {
+                console.log(this);
+                var id = $( this ).attr('id');
+                changeTimeHorizonFormat(id);
+              
+                var timeWindow = $( this ).text();
+                console.log(timeWindow);
+
+
+                $.ajax({
+                    // url : "https://onefigrapp.herokuapp.com/edge/dashboard/" + timeWindow,
+                    url : "http://localhost:8000/edge/dashboard/" + timeWindow,
+                    dataType: "json",
+                    success : function (data) {
+                      
+                      console.log("1Y data");
+                      console.log(data);
+                      console.log(Object.keys(data));
+                      setChart(data);
+                       
+                    }
+                });
+              
+          });
+        }
+
     </script>
 </body>
 

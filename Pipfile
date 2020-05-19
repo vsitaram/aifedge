@@ -27,6 +27,8 @@ django-heroku = "*"
 holidays = "*"
 django-cleanup = "*"
 django-sslserver = "*"
+djangorestframework = "*"
+django-cors-headers = "*"
 
 [requires]
 python_version = "3.6"

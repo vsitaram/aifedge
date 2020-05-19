@@ -7,6 +7,7 @@ from . import views
 app_name = 'edge'
 urlpatterns = [
 	path('', views.dashboard, name='dashboard'),
+	path('dashboard/<str:time_horizon>', views.dashboard_graph_data, name='dashboard_graph_data'),
     path('pitches/', views.pitches, name='pitches'),
     path('pitches/<int:pitch_id>/', views.pitch, name='pitch'),
 
