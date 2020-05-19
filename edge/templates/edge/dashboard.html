@@ -386,8 +386,8 @@
         $(window).ready( function() {
             new WOW().init();
             $.ajax({
-              url : "https://onefigrapp.herokuapp.com/edge/dashboard/1Y",
-              // url : "http://localhost:8000/edge/dashboard/1Y",
+              // url : "https://onefigrapp.herokuapp.com/edge/dashboard/1Y",
+              url : "http://localhost:8000/edge/dashboard/1Y",
               dataType: "json",
               success : function (data) {
                 
@@ -549,8 +549,8 @@
 
 
                 $.ajax({
-                    url : "https://onefigrapp.herokuapp.com/edge/dashboard/" + timeWindow,
-                    // url : "http://localhost:8000/edge/dashboard/" + timeWindow,
+                    // url : "https://onefigrapp.herokuapp.com/edge/dashboard/" + timeWindow,
+                    url : "http://localhost:8000/edge/dashboard/" + timeWindow,
                     dataType: "json",
                     success : function (data) {
                       

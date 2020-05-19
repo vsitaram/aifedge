@@ -45,8 +45,9 @@ INSTALLED_APPS = [
     'edge',
     'storages',
     'django_cleanup.apps.CleanupConfig',
+    'corsheaders',
     'rest_framework',
-    'corsheaders'
+    
 ]
 
 MIDDLEWARE = [
