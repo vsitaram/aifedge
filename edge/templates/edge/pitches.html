@@ -23,6 +23,21 @@
 
 
     <style type="text/css">
+        #logo {
+            width: 145px;
+            margin-top: -8px;
+            margin-bottom: -12px;
+            margin-left: -8px;
+        }
+
+        .navbar-nav > li {
+            margin-left: 1rem;
+        }
+
+        #navbar_supported_content {
+            margin-bottom: -16px;
+        }
+
         .dataTables_info {
             color: #fff;
         }
@@ -45,31 +60,31 @@
 
     <!--Main Navigation-->
     <header>
-
         <!-- Navbar -->
         <nav class="navbar fixed-top navbar-expand-lg navbar-dark elegant-color-dark scrolling-navbar">
             <div class="container">
 
                 <!-- Brand -->
                 <a class="navbar-brand waves-effect my-0" href="{% url 'edge:dashboard' %}">
-                    <img src="/static/edge/img/AIF_logo_white_v2.png" class="image-fluid" style="width: 145px;margin-top: -8px;margin-bottom: -12px;margin-left: -8px;">
+                    <img src="/static/edge/img/AIF_logo_white_v2.png" class="image-fluid" id="logo">
                 </a>
 
                 <!-- Collapse -->
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar_supported_content" aria-controls="navbar_supported_content"
                     aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
                 <!-- Links -->
-                <div class="collapse navbar-collapse" id="navbarSupportedContent" style="margin-bottom: -16px;">
+                <div class="collapse navbar-collapse" id="navbar_supported_content">
 
                     <!-- Left -->
+                    <!-- Empty list needed to shift actual menu items to the right -->
                     <ul class="navbar-nav mr-auto">
-                        
                     </ul>
 
                     <!-- Right -->
+                    <!-- Navbar items -->
                     <ul class="navbar-nav">
                         <li class="nav-item">
                             <a class="nav-link waves-effect" href="{% url 'edge:dashboard' %}">Home
@@ -87,8 +102,7 @@
                           <li class="nav-item btn-info rounded mb-3">
                                 <a class="nav-link waves-effect" href="{% url 'edge:login' %}">Login</a>
                             </li>
-                        {% endif %} 
-
+                        {% endif %}
                     </ul>
 
                 </div>
@@ -96,50 +110,54 @@
             </div>
         </nav>
         <!-- Navbar -->
-
     </header>
     <!--Main Navigation-->
 
     <!--Main layout-->
     <main class="mt-5 pt-5">
         <div class="container">
+
+            <!-- DataTable for all of the pitches -->
             <table id="dtBasicExample" class="table table-striped table-bordered text-white elegant-color" cellspacing="0" width="100%">
-              <thead>
-                <tr>
-                  <th class="th-sm">Title</th>
-                  <th class="th-sm">Date Pitched</th>
-                  <th class="th-sm">Pitched By</th>
-                  <th class="th-sm">Price Pitched</th>
-                  <th class="th-sm">Current Price</th>
-                  <th class="th-sm">Investment Entered</th>
-                  <th class="th-sm">Currently Invested</th>
-                </tr>
+                <thead>
+                    <tr>
+                        <th class="th-sm">Title</th>
+                        <th class="th-sm">Date Pitched</th>
+                        <th class="th-sm">Pitched By</th>
+                        <th class="th-sm">Price Pitched</th>
+                        <th class="th-sm">Current Price</th>
+                        <th class="th-sm">Investment Entered</th>
+                        <th class="th-sm">Currently Invested</th>
+                    </tr>
               </thead>
               <tbody>
+                <!-- Create a row for every pitch -->
                 {% for pitch in pitch_list %}
                     <tr onclick="window.location='{% url 'edge:pitch' pitch.id %}'">
-                      <td>{{ pitch.title }}
-                      <td>{{ pitch.pitch_date }}</td>
-                      <td> 
-                          {% for member in pitch.pitchers.all %} 
-                              {{ member }} 
-                              {% if not forloop.last %}
-                                  <br />
-                              {% endif %}
-                          {% endfor %}
-                      </td>
-                      <td>{{ pitch.pitch_price }}</td>
-                      {% for key, value in tickers_and_current_prices.items %}
+                        <td>{{ pitch.title }}
+                        <td>{{ pitch.pitch_date }}</td>
+                        <!-- List all of the pitchers -->
+                        <td> 
+                            {% for member in pitch.pitchers.all %} 
+                                {{ member }} 
+                                {% if not forloop.last %}
+                                    <br />
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>{{ pitch.pitch_price }}</td>
+                        <!-- Find and display the price of the stock -->
+                        {% for key, value in tickers_and_current_prices.items %}
 
                             {% ifequal key pitch.stock_ticker%}
 
                             <td>{{ value }}</td>
 
                             {% endifequal %}
-                      {% endfor %}
+                        {% endfor %}
 
-                      <td>{{ pitch.investment_entered }}</td>
-                      <td>{{ pitch.currently_invested }}</td>
+                        <td>{{ pitch.investment_entered }}</td>
+                        <td>{{ pitch.currently_invested }}</td>
                     </tr>                    
                 {% empty %}
                     <p>No pitches are available.</p>
@@ -159,7 +177,6 @@
             <a href="https://www.aifatuva.com" target="_blank"> Alternative Investment Fund.</a> Developed by Ram Vuppaladadiyam
         </div>
         <!--/.Copyright-->
-
     </footer>
     <!--/.Footer-->
 
@@ -179,6 +196,7 @@
         // Animations initialization
         new WOW().init();
         $(document).ready(function () {
+            // Initialize the table
             $('#dtBasicExample').DataTable({
                 "paging": true,
 
