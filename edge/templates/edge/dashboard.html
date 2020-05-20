@@ -269,16 +269,7 @@
             <!--Section: Recent Pitches start-->
             <section class="wow fadeIn">
 
-                <div class="row">
-                    <div class="col">
-                        <h3 class="text-left text-white mb-5">Recent Pitches</h3>        
-                    </div>
-                    <div class="col">
-                        <a class="btn btn-outline-info btn-sm waves-effect float-right" href="{% url 'edge:pitches' %}">See All Pitches</a>
-                    </div>
-                </div>
-                
-                
+                <h3 class="text-left text-white mb-5">Recent Pitches</h3>        
 
                 <!--Recent Pitches-->
                 <div class="row mb-4">
@@ -327,6 +318,12 @@
                     {% endfor %}                    
                 </div>
                 <!--Grid row-->
+
+                {% if recent_pitches %}
+                    <div class="row d-flex justify-content-center">
+                        <a class="btn btn-outline-info waves-effect" href="{% url 'edge:pitches' %}">See All Pitches</a>
+                    </div>
+                {% endif %}
 
             </section>
             <!--Section: Recent Pitches end-->
@@ -403,8 +400,8 @@
 
             // Start off by asynchronously loading 1Y data into the graph
             $.ajax({
-              url : "https://aifedge.herokuapp.com/edge/dashboard/1Y",
-              // url : "http://localhost:8000/edge/dashboard/1Y",
+              // url : "https://aifedge.herokuapp.com/edge/dashboard/1Y",
+              url : "http://localhost:8000/edge/dashboard/1Y",
               dataType: "json",
               success : function (data) {
                 
@@ -432,8 +429,8 @@
                     var timeWindow = $( this ).text();
                     // console.log(timeWindow);
                     $.ajax({
-                        url : "https://aifedge.herokuapp.com/edge/dashboard/" + timeWindow,
-                        // url : "http://localhost:8000/edge/dashboard/" + timeWindow,
+                        // url : "https://aifedge.herokuapp.com/edge/dashboard/" + timeWindow,
+                        url : "http://localhost:8000/edge/dashboard/" + timeWindow,
                         dataType: "json",
                         success : function (data) {
                           console.log(data);
