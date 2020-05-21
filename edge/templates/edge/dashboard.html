@@ -29,10 +29,6 @@
             margin-left: -8px;
         }
 
-        .navbar-nav > li {
-            margin-left: 1rem;
-        }
-
         #navbar_supported_content {
             margin-bottom: -16px;
         }
@@ -137,8 +133,8 @@
                                     <a class="nav-item nav-link px-1 text-info" id="time_window_1M">1M</a>
                                     <a class="nav-item nav-link px-1 text-info"id="time_window_3M">3M</a>
                                     <a class="nav-item nav-link px-1 text-info" id="time_window_6M">6M</a>
-                                    <a class="nav-item nav-link px-1 text-white-50" id="time_window_1Y"><u>1Y</u></a>
-                                    <a class="nav-item nav-link px-1 text-info "id="time_window_5Y">5Y</a>
+                                    <a class="nav-item nav-link px-1 text-info" id="time_window_1Y">1Y</a>
+                                    <a class="nav-item nav-link px-1 text-white-50 "id="time_window_5Y"><u>5Y</u></a>
                                     <a class="nav-item nav-link px-1 text-info" id="time_window_ALL">ALL</a>
                                 </nav>
                             </div>
@@ -394,9 +390,11 @@
         }); 
         
         
-        $(window).ready( function() {
+        $(document).ready( function() {
             // Animations initialization
             new WOW().init();
+
+            adjustButtonSpacing();
 
             // Start off by asynchronously loading 5Y data into the graph
             $.ajax({
@@ -444,7 +442,7 @@
             
         }); 
 
-        var currentTimeWindowSelectedID = 'time_window_1Y';
+        var currentTimeWindowSelectedID = 'time_window_5Y';
 
         function changeTimeWindowStyling(timeWindow) {
             // Changes styling of the time horizon options such that the selected time window will be underlined and gray, 
@@ -579,7 +577,14 @@
                 newClasses = classArr.join(" ");
                 timeWindow.setAttribute("class", newClasses);                
             }
-        }        
+        }  
+
+        function adjustButtonSpacing() {
+            // Adds 1 rem of spacing between navbar items on large screens.
+            if( $(window).width() > 992 ) {
+                $(".navbar-nav > li").css({"margin-left": "1rem"});
+            }
+        }      
 
     </script>
 </body>

@@ -31,10 +31,6 @@
             margin-left: -8px;
         }
 
-        .navbar-nav > li {
-            margin-left: 1rem;
-        }
-
         #navbar_supported_content {
             margin-bottom: -16px;
         }
@@ -647,19 +643,35 @@
     <script type="text/javascript" src="{% static 'edge/js/mdb.min.js' %}"></script>
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
     <script type="text/javascript">
-        new TradingView.widget({
-            "autosize": true,
-            "symbol": "{{ pitch.stock_exchange_abbreviation }}:{{ pitch.stock_ticker }}",
-            "interval": "D",
-            "timezone": "Etc/UTC",
-            "theme": "Dark",
-            "style": "3",
-            "locale": "en",
-            "toolbar_bg": "#f1f3f6",
-            "enable_publishing": false,
-            "withdateranges": true,
-            "container_id": "tradingview_e3067"
+
+        $(document).ready( function() {
+            adjustButtonSpacing();
+
+            new TradingView.widget({
+                "autosize": true,
+                "symbol": "{{ pitch.stock_exchange_abbreviation }}:{{ pitch.stock_ticker }}",
+                "interval": "D",
+                "timezone": "Etc/UTC",
+                "theme": "Dark",
+                "style": "3",
+                "locale": "en",
+                "toolbar_bg": "#f1f3f6",
+                "enable_publishing": false,
+                "withdateranges": true,
+                "container_id": "tradingview_e3067"
+            });
         });
+
+
+
+        function adjustButtonSpacing() {
+            // Adds 1 rem of spacing between navbar items on large screens.
+            if( $(window).width() > 992 ) {
+                $(".navbar-nav > li").css({"margin-left": "1rem"});
+            }
+        }
+
+        
     </script>
 </body>
 

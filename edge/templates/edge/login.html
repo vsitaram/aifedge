@@ -19,17 +19,25 @@
     <link rel="stylesheet" href="{% static 'edge/css/addons/datatables.min.css' %}">
     <!-- Your custom styles (optional) -->
     <link rel="stylesheet" href="{% static 'edge/css/style.css' %}">
+
+    <style type="text/css">
+      #logo {
+        width: 400px;
+      }
+
+      #container {
+        height: 100vh;
+      }
+    </style>
 </head>
 <body>
-
-  <!-- Start your project here-->  
-  <div style="height: 100vh;" class="elegant-color-dark scrollbar scrollbar-info">
+  <div class="elegant-color-dark scrollbar scrollbar-info" id="container">
     <div class="flex-center flex-column animated fadeIn">
 
       <form method="post">
           {% csrf_token %}
 
-          <a href="{% url 'edge:dashboard' %}"><img src="{% static 'edge/img/AIF_logo_white.png' %}" class="mb-4 img-fluid" alt="Responsive image" style="width: 400px"></a>
+          <a href="{% url 'edge:dashboard' %}"><img src="{% static 'edge/img/AIF_logo_white.png' %}" class="mb-4 img-fluid" alt="Responsive image" id="logo"></a>
 
           <input type="text" id="defaultLoginFormEmail" class="form-control mb-4" placeholder="Username" name="username">
 
@@ -40,7 +48,6 @@
       </form>
     </div>
   </div>
-  <!-- End your project here-->
 
   <!-- SCRIPTS -->
   <!-- JQuery -->
