@@ -398,7 +398,8 @@
 
             // Start off by asynchronously loading 5Y data into the graph
             $.ajax({
-              url : "https://aifedge.herokuapp.com/edge/dashboard/5Y",
+              url : "https://www.aifedge.com/edge/dashboard/5Y",
+              // url : "https://aifedge.herokuapp.com/edge/dashboard/5Y",
               // url : "http://localhost:8000/edge/dashboard/5Y",
               dataType: "json",
               success : function (data) {
@@ -427,7 +428,8 @@
                     var timeWindow = $( this ).text();
                     // console.log(timeWindow);
                     $.ajax({
-                        url : "https://aifedge.herokuapp.com/edge/dashboard/" + timeWindow,
+                        url : "https://www.aifedge.com/edge/dashboard/" + timeWindow,
+                        // url : "https://aifedge.herokuapp.com/edge/dashboard/" + timeWindow,
                         // url : "http://localhost:8000/edge/dashboard/" + timeWindow,
                         dataType: "json",
                         success : function (data) {
