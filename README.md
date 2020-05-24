@@ -1,3 +1,3 @@
 # aifedge
 
-# Documentation Coming Soon!
+Install the environment by running
