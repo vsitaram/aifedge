@@ -28,7 +28,8 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1', 'aifedge.herokuapp.com', 'aifedge.com']
+# ALLOWED_HOSTS = ['127.0.0.1', 'aifedge.herokuapp.com', 'aifedge.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'aifedge.herokuapp.com']
 
 
 # Application definition
@@ -67,7 +68,7 @@ CORS_ORIGIN_ALLOW_ALL = False
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:8000',
     'https://aifedge.herokuapp.com',
-    'https://www.aifedge.com',
+    # 'https://www.aifedge.com',
 ]
 
 REST_FRAMEWORK = {
@@ -102,14 +103,6 @@ WSGI_APPLICATION = 'aifedge.wsgi.application'
 
 DATABASES = {}
 DATABASES['default'] = dj_database_url.config(conn_max_age=600)
-
-CORS_ORIGIN_ALLOW_ALL = False
-
-CORS_ORIGIN_WHITELIST = (
-    'http://localhost:8000',
-    'https://aifedge.herokuapp.com',
-    'https://www.aifedge.com'
-)
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
