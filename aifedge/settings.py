@@ -76,7 +76,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],
 }
-
+ 
 ROOT_URLCONF = 'aifedge.urls'
 
 TEMPLATES = [
