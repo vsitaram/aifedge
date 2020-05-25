@@ -66,7 +66,8 @@ CORS_ORIGIN_ALLOW_ALL = False
 
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:8000',
-    'https://aifedge.herokuapp.com'
+    'https://aifedge.herokuapp.com',
+    'https://www.aifedge.com',
 ]
 
 REST_FRAMEWORK = {
