@@ -35,6 +35,7 @@ class Pitch(models.Model):
     threats_downsides = models.TextField(default="No Threats")
     other_notes = models.TextField(default="No Other Notes")
     exit_notes = models.TextField(null=True, blank=True, default="No Exit Notes")
+    
 
     def __str__(self):
         return self.title
