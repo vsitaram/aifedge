@@ -1,7 +1,8 @@
-$project
+AIFEdge
 ========
 
-$project will solve your problem of where to start with documentation,
+AIFEdge is the analyst portal for the Alternative Investment Fund at UVA. It can be used as a reflective tool for investment decisions, a resource to help generate new investment ideas, and a way to stay up to date with the fund. Analysts can use it to view current investments and all of the pitches that have come into the fund. Additionally, they can easily run various analytics tools that have been built by other AIF analysts.
+
 by providing a basic explanation of how to do it easily.
 
 Look how easy it is to use:
