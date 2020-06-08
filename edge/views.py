@@ -84,6 +84,15 @@ def pitch(request, pitch_id):
 
     return render(request, template_name, context)
 
+@login_required
+def tools(request):
+    template_name = 'edge/tools.html'
+    context = {
+        
+    }
+    
+    return render(request, template_name, context)
+
 def login(request):
 	template_name = 'edge/login.html'
 	return render(request, template_name)
