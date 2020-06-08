@@ -104,6 +104,14 @@ def tool(request, tool_id):
 
     return render(request, template_name, context)
 
+
+# Todo: link RAR with REST API
+@api_view(['GET'])
+def one_year_risk_adjusted_return(request, time_horizon):
+
+    if request.method == 'GET':
+        return Response(data.aif_nav_data_for_template(param_dict[time_horizon]))
+
 def login(request):
 	template_name = 'edge/login.html'
 	return render(request, template_name)

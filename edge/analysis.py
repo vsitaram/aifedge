@@ -317,5 +317,6 @@ class Data():
 		regression.fit(X, Y)
 		print('Intercept: \n', regression.intercept_)
 		print('Coefficients: \n', regression.coef_)
+		print(regression)
 		ret = regression.intercept_
 		return '{:.1%}'.format(ret)
