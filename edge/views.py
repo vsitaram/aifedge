@@ -94,6 +94,16 @@ def tools(request):
 
     return render(request, template_name, context)
 
+@login_required
+def tool(request, tool_id):
+    tool = get_object_or_404(Tool, pk=tool_id)
+    template_name = 'edge/' + tool.template_name
+    context = {
+        'tool': tool
+    }
+
+    return render(request, template_name, context)
+
 def login(request):
 	template_name = 'edge/login.html'
 	return render(request, template_name)
