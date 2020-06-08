@@ -111,76 +111,8 @@
     <main class="mt-5 pt-5">
         <div class="container">
 
-            <h3 class="mb-5 wow fadeIn text-white" data-wow-delay="0.2s">Tools</h3>
+            <h3 class="mb-5 wow fadeIn text-white" data-wow-delay="0.2s">In Progress</h3>
 
-            <!--Section: Cards-->
-            <section class="wow fadeIn" data-wow-delay="0.2s">
-                <!--Grid row-->
-                <div class="row mb-4">
-
-                    {% for tool in tool_list %}
-
-                    <!--Grid column-->
-                    <div class="col-lg-4 col-md-12 mb-4">
-                        <!--Card-->
-                        <div class="card elegant-color">
-                            <!--Card content-->
-                            <div class="card-body container">
-                                <div class="row mb-2">
-                                    <!--Title-->
-                                    <h4 class="card-title col text-left text-white">{{ tool.title }}</h4>      
-                                </div>
-
-                                <div class="row mb-2">
-                                    <!--Text-->
-                                    <p class="card-text col-12">
-                                        {{ tool.description }}
-                                    </p>
-                                </div>
-                                
-                                <div class="row mb-2">
-                                    <!--Text-->
-                                    <p class="card-text col-12">
-                                        Created by 
-
-                                        {% if tool.creators.all|length_is:"1" %}
-                                            {{ tool.creators.all|first }}
-                            
-                                        {% elif tool.creators.all|length_is:"2" %}
-                                            {{tool.creators.all.0}} and {{ tool.creators.all.1 }}
-                                        {% else %}
-
-                                            {% for member in tool.creators.all %} 
-                                                {% if not forloop.last %}, and {% endif %} 
-                                                {{ member }}
-                                            {% endfor %}
-
-                                        {% endif %}
-                                    </p>
-                                </div> 
-
-                                <div class="row d-flex justify-content-center">
-                                    <div>
-                                        <a href="" class="btn btn-primary btn-info btn-sm">Use Tool</a>  
-                                    </div>
-                                </div> 
-                                                    
-                            </div>
-                        </div>
-                        <!--/.Card-->
-                    </div>
-                    <!--Grid column--> 
-
-                    <!-- If there are no tools... -->
-                    {% empty %}
-
-                        <p>No Tools!</p>
-
-                    {% endfor %}    
-
-                </div>
-                <!--Grid row-->
-            </section>
 
         </div>
     </main>

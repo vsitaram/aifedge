@@ -52,6 +52,7 @@ class Tool(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField(default="No Description")
     creators = models.ManyToManyField(Member)
+    template_name = models.CharField(max_length=200)
     date_created = models.DateTimeField(auto_now_add=True, blank=True)
 
     def __str__(self):
