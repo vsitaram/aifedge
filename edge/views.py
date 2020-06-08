@@ -12,7 +12,7 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from .models import Pitch, Member, Document
+from .models import Pitch, Member, Document, Tool
 from .analysis import *
 
 data = Data()
@@ -87,10 +87,11 @@ def pitch(request, pitch_id):
 @login_required
 def tools(request):
     template_name = 'edge/tools.html'
+    tool_list = Tool.objects.all()
     context = {
-        
+        'tool_list': tool_list
     }
-    
+
     return render(request, template_name, context)
 
 def login(request):
