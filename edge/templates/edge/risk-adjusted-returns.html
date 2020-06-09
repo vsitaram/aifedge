@@ -111,40 +111,78 @@
     <main class="mt-5 pt-5">
         <div class="container">
 
-            <h3 class="mb-5 wow fadeIn text-white" data-wow-delay="0.2s">{{ tool.title }}</h3>
+            <h2 class="mt-3 wow fadeIn text-white text-center h3-responsive" data-wow-delay="0.2s">{{ tool.title }}</h2>
 
-            <div class="custom-control custom-checkbox text-white my-2">
-                <input type="checkbox" class="custom-control-input" id="three-factor-toggle">
-                <label class="custom-control-label" for="three-factor-toggle">Calculate 3-Factor Adjusted Returns</label>
-            </div>
+            <p class="text-white-50 mb-5 text-center ">by Ram Vuppaladadiyam</p>
 
-            <div class="custom-control custom-checkbox text-white my-2">
-                <input type="checkbox" class="custom-control-input" id="five-factor-toggle">
-                <label class="custom-control-label" for="five-factor-toggle">Calculate 5-Factor Adjusted Returns</label>
-            </div>
+            <br />
+            
+            <div class="text-center">
+                <div class="custom-control custom-checkbox text-white my-2">
+                    <input type="checkbox" class="custom-control-input" id="three_factor_toggle">
+                    <label class="custom-control-label" for="three_factor_toggle">Calculate 3-Factor Adjusted Returns</label>
+                </div>
 
-            <div class="custom-control custom-checkbox text-white my-2">
-                <input type="checkbox" class="custom-control-input" id="current-portfolio-toggle">
-                <label class="custom-control-label" for="current-portfolio-toggle">Use Current Portfolio Holdings</label>
+                <div class="custom-control custom-checkbox text-white my-2">
+                    <input type="checkbox" class="custom-control-input" id="five_factor_toggle">
+                    <label class="custom-control-label" for="five_factor_toggle">Calculate 5-Factor Adjusted Returns</label>
+                </div>
+
+                <div class="custom-control custom-checkbox text-white my-2">
+                    <input type="checkbox" class="custom-control-input" id="historical_portfolio_toggle" checked>
+                    <label class="custom-control-label" for="historical_portfolio_toggle">Use Historical Portfolio Performance</label>
+                </div>
             </div>
 
             <br />  
 
-            <div class="form-group border-white text-white">
-                <label for="custom-portfolio-json">Enter Holdings JSON</label>
-                <textarea class="form-control  elegant-color" id="custom-portfolio-json" rows="6" 
+            <div class="form-group border-white text-white" id="custom_portfolio_div">
+                <label for="custom_portfolio_json">Enter Holdings JSON</label>
+                <textarea class="form-control elegant-color" id="custom_portfolio_json" rows="6" 
                         placeholder='{
-        "AAPL": 1,
-        "HXL": 10
+        "AAPL": 0.6,
+        "HXL": 0.4
 }'
-                ></textarea>
+                >
+<!-- {
+   "AAPL": 0.6,
+    "HXL": 0.4
+} -->
+                </textarea>
             </div>
 
-            <div class="row d-flex justify-content-center">
+            <div class="text-center my-5">
                 <div>
-                    <a href="{% url 'edge:tool' tool.id %}" class="btn btn-primary btn-info">Calculate Returns</a>  
+                    <button class="btn btn-primary btn-info" id="calculate_returns_button">Calculate Returns</button>
                 </div>
             </div>
+
+            <br />
+
+            <div id="three_factor_container">
+                <h5 class="my-5 wow fadeIn text-white text-center" data-wow-delay="0.2s">3-Factor Regression Results</h5>
+
+                <table class="table table-bordered text-white elegant-color" id="3FTable">
+                    <thead>
+                    </thead>
+                    <tbody>  
+                    </tbody>
+                </table>
+            </div>
+
+            <br />
+
+            <div id="five_factor_container">
+                <h5 class="my-5 wow fadeIn text-white text-center" data-wow-delay="0.2s">5-Factor Regression Results</h5>
+
+                <table class="table table-bordered text-white elegant-color" id="5FTable">
+                    <thead>
+                    </thead>
+                    <tbody>  
+                    </tbody>
+                </table>
+            </div>
+            
         </div>
     </main>
     <!--Main layout-->
@@ -177,6 +215,100 @@
             new WOW().init();
 
             adjustButtonSpacing();
+            $("#custom_portfolio_div").hide();
+            $("#three_factor_container").hide();
+            $("#five_factor_container").hide();
+
+        });
+
+        $("input[id='historical_portfolio_toggle']").on("change", function() {
+            if( $("input[id='historical_portfolio_toggle']").is(':checked') ) {
+                $("#custom_portfolio_div").hide();
+            }
+            else {
+                $("#custom_portfolio_div").show();
+            }
+        });
+
+        $("#calculate_returns_button").on("click", function() {
+            
+            
+            if( $("input[id='historical_portfolio_toggle']").is(':checked') ) {
+                
+                if( $("input[id='three_factor_toggle']").is(':checked') ) {
+
+                    $("#three_factor_container").show();
+
+                    $.ajax({
+                      url : "/edge/tools/risk-adjusted-returns-from-nav/3F",
+                      dataType: "json",
+                      success : function (data) {
+                        console.log("3F data");
+                        console.log(data);
+                        clearTable("3FTable");
+                        createTable(data, "3FTable");
+                      }
+                    });
+                }
+
+                if( $("input[id='five_factor_toggle']").is(':checked') ) {
+
+                    $("#five_factor_container").show();
+
+                    $.ajax({
+                      url : "/edge/tools/risk-adjusted-returns-from-nav/5F",
+                      dataType: "json",
+                      success : function (data) {
+                        console.log("5F data");
+                        console.log(data);
+                        clearTable("5FTable");
+                        createTable(data, "5FTable");
+                      }
+                    });
+                }
+                
+            }
+            else {
+
+                // console.log($("#custom_portfolio_json").val());
+                // console.log(JSON.parse($("#custom_portfolio_json").val()));
+                // console.log(JSON.stringify(JSON.parse($("#custom_portfolio_json").val())));
+                var jsonString = JSON.stringify(JSON.parse($("#custom_portfolio_json").val()));
+
+                if( $("input[id='three_factor_toggle']").is(':checked') ) {
+
+                    $("#three_factor_container").show();
+
+                    $.ajax({
+                      url : "/edge/tools/risk-adjusted-returns-custom-portfolio/3F",
+                      dataType: "json",
+                      data: {"data": jsonString},
+                      success : function (data) {
+                        console.log("3F data");
+                        console.log(data);
+                        clearTable("3FTable");
+                        createTable(data, "3FTable");
+                      }
+                    });
+                }
+
+                if( $("input[id='five_factor_toggle']").is(':checked') ) {
+
+                    $("#five_factor_container").show();
+
+                    $.ajax({
+                      url : "/edge/tools/risk-adjusted-returns-custom-portfolio/5F",
+                      dataType: "json",
+                      data: {"data": jsonString},
+                      success : function (data) {
+                        console.log("5F data");
+                        console.log(data);
+                        clearTable("5FTable");
+                        createTable(data, "5FTable");
+                      }
+                    });
+                }
+            }
         });
 
         function adjustButtonSpacing() {
@@ -185,6 +317,46 @@
                 $(".navbar-nav > li").css({"margin-left": "1rem"});
             }
         } 
+
+        function createTable(data, factorTableID) {
+            var table = document.getElementById(factorTableID);
+
+            var tableHeaderIndices = ["Factor"].concat(Object.keys(data));
+
+            // Create table header
+            var tableHeaderRow = document.createElement("tr");
+            table.firstElementChild.appendChild(tableHeaderRow);
+            for(var tableHeaderIndex = 0; tableHeaderIndex < tableHeaderIndices.length; tableHeaderIndex++) {
+                th = document.createElement("th");
+                th.innerHTML = tableHeaderIndices[tableHeaderIndex];
+                th.setAttribute("scope", "col");
+                table.firstElementChild.firstElementChild.appendChild(th);
+            }
+
+            // Create table rows
+            var factors = Object.keys(data[tableHeaderIndices[1]]);
+            for(var rowIndex = 0; rowIndex < factors.length; rowIndex++) {
+                var tableRow = document.createElement("tr");
+                for(var tableHeaderIndex = 0; tableHeaderIndex < tableHeaderIndices.length; tableHeaderIndex++) {
+                    var td = document.createElement("td");
+                    if(tableHeaderIndex == 0) {
+                        td.innerHTML = factors[rowIndex];
+                    }
+                    else {
+                        td.innerHTML = data[tableHeaderIndices[tableHeaderIndex]][factors[rowIndex]].toFixed(5);
+                    }
+                    tableRow.appendChild(td);    
+                }
+                table.children[1].appendChild(tableRow);
+            }
+        }
+
+        function clearTable(factorTableID) {
+            var table = document.getElementById(factorTableID);
+            table.children[0].innerHTML = "";
+            table.children[1].innerHTML = "";
+
+        }
     </script>
 </body>
 

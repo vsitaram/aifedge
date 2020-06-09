@@ -9,6 +9,7 @@ import datetime as datetime
 import calendar
 from dateutil.relativedelta import relativedelta
 from dateutil import parser
+import statsmodels.api as sm
 from sklearn import linear_model
 import holidays
 import statsmodels.api as sm
@@ -24,7 +25,7 @@ from django.conf import settings
 class Data():
 	"""docstring for Data"""
 	def __init__(self):
-		self.zip_file_url ='https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/F-F_Research_Data_5_Factors_2x3_daily_CSV.zip'
+		self.zip_file_url = 'https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/F-F_Research_Data_5_Factors_2x3_daily_CSV.zip'
 		self.data = self._get_data()
 
 	def _convert_date_format(self, indexDate):
@@ -75,17 +76,17 @@ class Data():
 			while(startDate.weekday() > 4 or startDate in holidays.US(years=startDate.year)):
 			  	startDate = startDate - datetime.timedelta(days=1)
 
-			print(self.data.loc[startDate.strftime('%Y-%m-%d')])
-			print(self.data.loc[endDate.strftime('%Y-%m-%d')])
+			# print(self.data.loc[startDate.strftime('%Y-%m-%d')])
+			# print(self.data.loc[endDate.strftime('%Y-%m-%d')])
 			time_series = self.data.loc[startDate.strftime('%Y-%m-%d'):endDate.strftime('%Y-%m-%d')]
-			print("TIME SERIES")
-			print(time_series)
+			# print("TIME SERIES")
+			# print(time_series)
 			time_series.index = time_series.index.strftime('%m-%d-%Y')
 			ret = time_series["NAV"].to_dict()
 		else:
 			time_series = self.data.loc[:]
-			print("TIME SERIES")
-			print(time_series)
+			# print("TIME SERIES")
+			# print(time_series)
 			time_series.index = time_series.index.strftime('%m-%d-%Y')
 			ret = time_series["NAV"].to_dict()
 		# print(len(navs.values.flatten().tolist()))
@@ -104,13 +105,13 @@ class Data():
 			endDate = datetime.datetime.today() - datetime.timedelta(days=1)
 
 		while(endDate.weekday() > 4 or endDate in holidays.US(years=endDate.year)):
-			print(endDate)
+			# print(endDate)
 			endDate = endDate - datetime.timedelta(days=1)
 		endEndDate = endDate + datetime.timedelta(days=1)
 
 		end = pdr.get_data_yahoo(securities, start=endDate.strftime('%Y-%m-%d'), end=endEndDate.strftime('%Y-%m-%d'),  as_panel = False, auto_adjust=False)
 		ret = end['Adj Close'][0]
-		print("get_current_price: " + str(ret))
+		# print("get_current_price: " + str(ret))
 		return round(ret, 2)
 
 
@@ -118,7 +119,7 @@ class Data():
 	    return ((prices / prices.shift(1) - 1).dropna())
 
 	def securities_year_to_date_return(self, securities, weights):
-		print('start')
+		# print('start')
 		eastern = timezone('US/Eastern')
 		endDate = datetime.datetime.now(eastern)
 		
@@ -127,7 +128,7 @@ class Data():
 			endDate = datetime.datetime.today() - datetime.timedelta(days=1)
 
 		while(endDate.weekday() > 4 or endDate in holidays.US(years=endDate.year)):
-			print(endDate)
+			# print(endDate)
 			endDate = endDate - datetime.timedelta(days=1)
 		endEndDate = endDate + datetime.timedelta(days=1)
 		
@@ -135,29 +136,30 @@ class Data():
 		while(startDate.weekday() > 4 or startDate in holidays.US(years=startDate.year)):
 		  	startDate = startDate - datetime.timedelta(days=1)
 		startEndDate = startDate + datetime.timedelta(days=1)
-		print("securities_year_to_date_return :" + str(startDate))
-		print("securities_year_to_date_return :" + str(startEndDate))
-		print("securities_year_to_date_return :" + str(endDate))
-		print("securities_year_to_date_return :" + str(endEndDate))
+		# print("securities_year_to_date_return :" + str(startDate))
+		# print("securities_year_to_date_return :" + str(startEndDate))
+		# print("securities_year_to_date_return :" + str(endDate))
+		# print("securities_year_to_date_return :" + str(endEndDate))
+
 		# print(datetime.date(2020, 1, 20) in holidays.US(years=[startDate.year, endDate.year]))
 		# print(holidays.US(years=[startDate.year, endDate.year]))
 		
 		
 		beg = pdr.get_data_yahoo(securities, start=startDate.strftime('%Y-%m-%d'), end=startEndDate.strftime('%Y-%m-%d'),  as_panel = False, auto_adjust=False)
-		print(beg)
+		# print(beg)
 		end = pdr.get_data_yahoo(securities, start=endDate.strftime('%Y-%m-%d'), end=endEndDate.strftime('%Y-%m-%d'),  as_panel = False, auto_adjust=False)
 		# allSecuritiesAllData = pdr.get_data_yahoo(securities, start=dateStart.strftime('%Y-%m-%d'), end=dateEnd.strftime('%Y-%m-%d'),  as_panel = False)
-		print(end)
+		# print(end)
 
 		allSecuritiesAllData = pd.concat([beg['Adj Close'], end['Adj Close']]).dropna()
-		print(allSecuritiesAllData)
+		# print(allSecuritiesAllData)
 		w = weights * self.get_daily_returns_df(allSecuritiesAllData)
-		print(w)
+		# print(w)
 		if(isinstance(w, pd.DataFrame)):
 			w = w.sum(axis = 1, skipna = True)
 
-		print(w)
-		print("securities_year_to_date_return :" + str(w[0]))
+		# print(w)
+		# print("securities_year_to_date_return :" + str(w[0]))
 		ret = w[0]
 		return '{:.1%}'.format(ret)
 
@@ -174,10 +176,10 @@ class Data():
 		# print(str(endDate))
 		# print(self.data[-60:])
 		# print(self.data.index)
-		print(self.data.loc[startDate.strftime('%Y-%m-%d')])
-		print(self.data.loc[endDate.strftime('%Y-%m-%d')])
+		# print(self.data.loc[startDate.strftime('%Y-%m-%d')])
+		# print(self.data.loc[endDate.strftime('%Y-%m-%d')])
 		ret = self.data.loc[endDate.strftime('%Y-%m-%d')][0] / self.data.loc[startDate.strftime('%Y-%m-%d')][0] - 1
-		print("Portfolio YTD: " + str(ret))
+		# print("Portfolio YTD: " + str(ret))
 		return '{:.1%}'.format(ret)
 
 	def security_total_return(self, securities, entry_price, entry_date, exit_price, exit_date):
@@ -222,10 +224,10 @@ class Data():
 		while(startDate.weekday() > 4 or startDate in holidays.US(years=startDate.year)):
 		  	startDate = startDate - datetime.timedelta(days=1)
 
-		print(self.data.loc[startDate.strftime('%Y-%m-%d')])
-		print(self.data.loc[endDate.strftime('%Y-%m-%d')])
+		# print(self.data.loc[startDate.strftime('%Y-%m-%d')])
+		# print(self.data.loc[endDate.strftime('%Y-%m-%d')])
 		ret = self.data.loc[endDate.strftime('%Y-%m-%d')][0] / self.data.loc[startDate.strftime('%Y-%m-%d')][0] - 1
-		print("Total portfolio return: " + str(ret))
+		# print("Total portfolio return: " + str(ret))
 		return '{:.1%}'.format(ret)
 
 
@@ -255,25 +257,24 @@ class Data():
 		portfolioExcessReturns = pd.DataFrame(dfjoin['Daily Portfolio Returns'].values - dfjoin['RF'].values, columns=['RP-RF'], index=dfjoin.index.values.flatten())
 		# print(portfolioExcessReturns)
 		dfjoin = dfjoin.join(portfolioExcessReturns).drop(columns=['Daily Portfolio Returns', 'RF'])
-		# print(dfjoin)
+		print(dfjoin.to_string())
 		if threeFactor:
 			factors = dfjoin.columns.tolist()[0:3]
 		else:
 			factors = dfjoin.columns.tolist()[0:5]
-
-		print(factors)
+		
 		X = dfjoin[factors] 
+		X = sm.add_constant(X)
 		Y = dfjoin['RP-RF']
-		# print(X)
-		# print(Y)
-		 
-		# with sklearn
-		regression = linear_model.LinearRegression()
-		regression.fit(X, Y)
-		print('Intercept: \n', regression.intercept_)
-		print('Coefficients: \n', regression.coef_)
-		ret = regression.intercept_ * 365 / 100
-		return '{:.1%}'.format(ret)
+
+		regression = sm.OLS(Y, X).fit()
+		print(regression.params)
+		print('Intercept: \n', regression.params[0])
+		print('Coefficients: \n', regression.params[1])
+		ret = regression.params[0] * 365 / 100
+		# return '{:.1%}'.format(ret)
+		return regression.summary2().tables[1].to_dict()
+		
 
 	# Find RAR of a portfolio constructed from individual stock info from Yahoo Finance
 	def one_year_risk_adjusted_return_from_securities(self, threeFactor, securities, weights):
@@ -303,20 +304,25 @@ class Data():
 		dfjoin = dfjoin.join(portfolioExcessReturns).drop(columns=['Daily Portfolio Returns', 'RF'])
 
 		if threeFactor:
-			factors = dfjoin.columns.tolist()[0:-4]
+			factors = dfjoin.columns.tolist()[0:3]
 		else:
-			factors = dfjoin.columns.tolist()[0:-2]
+			factors = dfjoin.columns.tolist()[0:5]
+
+		if threeFactor:
+			factors = dfjoin.columns.tolist()[0:3]
+		else:
+			factors = dfjoin.columns.tolist()[0:5]
 
 		print("factors: " + str(factors))
 
 		X = dfjoin[factors] 
+		X = sm.add_constant(X)
 		Y = dfjoin['RP-RF']
 		 
-		# with sklearn
-		regression = linear_model.LinearRegression()
-		regression.fit(X, Y)
-		print('Intercept: \n', regression.intercept_)
-		print('Coefficients: \n', regression.coef_)
-		print(regression)
-		ret = regression.intercept_
-		return '{:.1%}'.format(ret)
+		regression = sm.OLS(Y, X).fit()
+		print(regression.params)
+		print('Intercept: \n', regression.params[0])
+		print('Coefficients: \n', regression.params[1])
+		ret = regression.params[0] * 365 / 100
+		# return '{:.1%}'.format(ret)
+		return regression.summary2().tables[1].to_dict()

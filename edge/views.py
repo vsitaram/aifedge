@@ -12,6 +12,8 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+import json
+
 from .models import Pitch, Member, Document, Tool
 from .analysis import *
 
@@ -21,13 +23,13 @@ def dashboard(request):
     template_name = 'edge/dashboard.html'
     current_holdings = Pitch.objects.filter(currently_invested=True)
     recent_pitches = Pitch.objects.order_by('-pitch_date')[:6]
-
+    risk_adj_return = '{:.1%}'.format(data.one_year_risk_adjusted_return_from_NAV(threeFactor=True)["Coef."]["const"])
     context = {
     	'current_holdings': current_holdings,
     	'recent_pitches': recent_pitches,
         'dashboard_as_of': data.dashboard_as_of(),
         'portfolio_year_to_date_return': data.portfolio_year_to_date_return(),
-        'one_year_risk_adjusted_return_from_NAV': data.one_year_risk_adjusted_return_from_NAV(threeFactor=True),
+        'one_year_risk_adjusted_return_from_NAV': risk_adj_return
     }
     
     context['portfolio_one_year_return'] = data.portfolio_one_year_return()
@@ -105,12 +107,25 @@ def tool(request, tool_id):
     return render(request, template_name, context)
 
 
-# Todo: link RAR with REST API
 @api_view(['GET'])
-def one_year_risk_adjusted_return(request, time_horizon):
+def one_year_risk_adjusted_return_custom_portfolio(request, three_factor):
 
     if request.method == 'GET':
-        return Response(data.aif_nav_data_for_template(param_dict[time_horizon]))
+        query_params = request.query_params["data"]
+        json_query_params = json.loads(query_params)
+        three_factor_param = three_factor == "3F"
+        securities_param = list(json_query_params.keys())
+        weights_param = list(json_query_params.values())
+        return Response(data.one_year_risk_adjusted_return_from_securities(three_factor_param, securities_param, weights_param))
+
+@api_view(['GET'])
+def one_year_risk_adjusted_return_from_nav(request, three_factor):
+
+    if request.method == 'GET':
+        three_factor_param = three_factor == "3F"
+        return Response(data.one_year_risk_adjusted_return_from_NAV(three_factor_param))
+        
+        
 
 def login(request):
 	template_name = 'edge/login.html'
