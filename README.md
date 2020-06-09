@@ -134,7 +134,7 @@ Start the server.
 
 Go to http://localhost:8000/. You'll see the application without any pitches or tools. You should just see the graph and KPIs on the dashboard.
 
-To get the database information, you have to get a backup from the Heroku app called latest.dump. You can either 1) get the latest.dump file from someone in Risk, or 2) get it yourself with your access to the Heroku account. If you are following the latter options, follow these steps.
+To get the database information, you have to get a backup from the Heroku app called latest.dump. You can either 1) get the latest.dump file from someone in Risk, or 2) get it yourself with your access to the Heroku account. If you are following the latter option, follow these steps.
 
 Install the Heroku CLI from https://devcenter.heroku.com/articles/heroku-cli. If you are using Windows Subsystem for Linux (WSL), run the following to install the Heroku CLI.
 
