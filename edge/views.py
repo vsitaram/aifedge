@@ -53,7 +53,7 @@ def dashboard_graph_data(request, time_horizon):
 @login_required
 def pitches(request):
     template_name = 'edge/pitches.html'
-    pitch_list = Pitch.objects.all()
+    pitch_list = Pitch.objects.all().order_by('-pitch_date')
     tickers_and_current_prices = {pitch.stock_ticker: data.get_current_price([pitch.stock_ticker]) for pitch in pitch_list}
     context = {
     	'pitch_list': pitch_list,

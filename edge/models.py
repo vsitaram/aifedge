@@ -36,9 +36,11 @@ class Pitch(models.Model):
     other_notes = models.TextField(default="No Other Notes")
     exit_notes = models.TextField(null=True, blank=True, default="No Exit Notes")
     
-
     def __str__(self):
         return self.title
+
+    class Meta:
+        verbose_name_plural = "Pitches"
 
 class Document(models.Model):
     pitch = models.ForeignKey(Pitch, on_delete=models.CASCADE, default=None)
