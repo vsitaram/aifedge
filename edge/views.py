@@ -14,12 +14,12 @@ from rest_framework.response import Response
 
 import json
 
-from .models import Pitch, Member, Document, Tool#, DataFile
+from .models import Pitch, Member, Document, Tool, DataFile
 from .analysis import *
 
-# latest_data_file_url = DataFile.objects.order_by('-uploaded_at')[0].upload.name if DataFile.objects.order_by('-uploaded_at') else 'data.csv'
+latest_data_file_url = DataFile.objects.order_by('-uploaded_at')[0].upload.name if DataFile.objects.order_by('-uploaded_at') else 'data.csv'
 # file_url = latest_data_file.upload.name
-data = Data("data_06102020.csv")
+data = Data(latest_data_file_url)
 
 def dashboard(request):
     template_name = 'edge/dashboard.html'
