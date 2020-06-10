@@ -24,14 +24,14 @@ from django.conf import settings
 
 class Data():
 	"""docstring for Data"""
-	def __init__(self):
+	def __init__(self, file_url):
 		self.zip_file_url = 'https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/F-F_Research_Data_5_Factors_2x3_daily_CSV.zip'
-		self.data = self._get_data()
+		self.data = self._get_data(file_url)
 
 	def _convert_date_format(self, indexDate):
 		return datetime.datetime.strptime(str(int(indexDate)), '%Y%m%d').strftime('%Y-%m-%d')
 
-	def _get_data(self):
+	def _get_data(self, file_url):
 		# data_AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
 		# AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
 		# AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
@@ -42,7 +42,7 @@ class Data():
 
 		
 
-		object_key = settings.AWS_DATA_LOCATION + '/data.csv'
+		object_key = settings.AWS_DATA_LOCATION + '/' + file_url
 		csv_obj = client.get_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=object_key)
 		body = csv_obj['Body']
 		csv_string = body.read().decode('utf-8')

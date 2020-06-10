@@ -157,6 +157,8 @@ AWS_S3_OBJECT_PARAMETERS = {
 AWS_PUBLIC_FILE_LOCATION = config('AWS_PUBLIC_FILE_LOCATION')
 DEFAULT_FILE_STORAGE = 'aifedge.storage_backends.PublicFileStorage'
 
+PRIVATE_DATA_STORAGE = 'hello_django.storage_backends.PrivateDataStorage'
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 

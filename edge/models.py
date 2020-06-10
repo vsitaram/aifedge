@@ -1,4 +1,7 @@
 from django.db import models
+from aifedge.storage_backends import PublicFileStorage, PrivateDataStorage
+import datetime as datetime
+from pytz import timezone
 
 class Member(models.Model):
     first_name = models.CharField(max_length=200)
@@ -45,7 +48,19 @@ class Pitch(models.Model):
 class Document(models.Model):
     pitch = models.ForeignKey(Pitch, on_delete=models.CASCADE, default=None)
     uploaded_at = models.DateTimeField(auto_now_add=True, blank=True)
-    upload = models.FileField(default=None)
+    upload = models.FileField(default=None, storage=PublicFileStorage())
+
+    def __str__(self):
+        return self.upload.name
+
+def rename_data_file(instance, filename):
+    filename = "data_" + datetime.datetime.now(timezone('US/Eastern')).strftime('%m%d%Y') + ".csv"
+    return filename
+
+class DataFile(models.Model):
+    uploaded_at = models.DateTimeField(auto_now_add=True, blank=True)
+    # upload = models.FileField(storage=PrivateDataStorage())
+    upload = models.FileField(upload_to=rename_data_file, storage=PrivateDataStorage())
 
     def __str__(self):
         return self.upload.name

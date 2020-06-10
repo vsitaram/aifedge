@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Pitch, Member, Document, Tool
+from .models import Pitch, Member, Document, Tool, DataFile
 
 class DocumentInline(admin.TabularInline):
     model = Document
@@ -16,4 +16,6 @@ class ToolAdmin(admin.ModelAdmin):
 admin.site.register(Pitch, PitchAdmin)
 admin.site.register(Member)
 admin.site.register(Document)
+admin.site.register(DataFile)
 admin.site.register(Tool, ToolAdmin)
+
