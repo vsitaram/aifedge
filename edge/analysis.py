@@ -1,6 +1,5 @@
 import pandas as pd
-from io import BytesIO, StringIO 
-import requests, zipfile
+from io import BytesIO, StringIO
 from pandas_datareader import data as pdr
 import numpy as np
 from scipy import stats
@@ -22,11 +21,12 @@ yf.pdr_override() # <== that's all it takes :-)
 # import os
 from django.conf import settings
 
-class Data():
+from .tools.risk_adjusted_returns import *
+
+class NAVData():
 	"""docstring for Data"""
-	def __init__(self, file_url):
-		self.zip_file_url = 'https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/F-F_Research_Data_5_Factors_2x3_daily_CSV.zip'
-		self.data = self._get_data(file_url)
+	def __init__(self, latest_data_file_name):
+		self.data = self._get_data(latest_data_file_name)
 
 	def _convert_date_format(self, indexDate):
 		return datetime.datetime.strptime(str(int(indexDate)), '%Y%m%d').strftime('%Y-%m-%d')
@@ -45,18 +45,34 @@ class Data():
 
 		return df
 
-	def dashboard_as_of(self):
+class PortfolioAnalysis():
+	"""docstring for PortfolioAnalysis"""
+	def __init__(self, nav_data):
+		self.data = nav_data.data
+
+	def as_of(self):
 		return self.data.index[-1].strftime('%m-%d-%Y')
 
-	def pitch_as_of(self):
-		eastern = timezone('US/Eastern')
-		endDate = datetime.datetime.now(eastern)
-		
-		beforeMondayDayEnd = endDate.hour < 17 and endDate.weekday() == 0
-		if beforeMondayDayEnd:
-			endDate = datetime.datetime.today() - datetime.timedelta(days=1)
+	def portfolio_one_year_return(self):
+		endDate = self.data.index[len(self.data) - 1]
+		startDate = endDate - relativedelta(years=1)
+		while(startDate.weekday() > 4 or startDate in holidays.US(years=startDate.year)):
+		  	startDate = startDate - datetime.timedelta(days=1)
 
-		return endDate.strftime('%m-%d-%Y')
+		ret = self.data.loc[endDate.strftime('%Y-%m-%d')][0] / self.data.loc[startDate.strftime('%Y-%m-%d')][0] - 1
+		return '{:.1%}'.format(ret)
+
+	def portfolio_year_to_date_return(self):
+		endDate = self.data.index[len(self.data) - 1]
+		while(endDate.weekday() > 4 or endDate in holidays.US(years=endDate.year)):
+			endDate = endDate - datetime.timedelta(days=1)
+
+		startDate = datetime.datetime(endDate.year - 1, 12, 31)
+		while(startDate.weekday() > 4 or startDate in holidays.US(years=startDate.year)):
+		  	startDate = startDate - datetime.timedelta(days=1)
+
+		ret = self.data.loc[endDate.strftime('%Y-%m-%d')][0] / self.data.loc[startDate.strftime('%Y-%m-%d')][0] - 1
+		return '{:.1%}'.format(ret)
 
 	def aif_nav_data_for_template(self, time_horizon_params):
 		ret = None
@@ -76,6 +92,19 @@ class Data():
 
 		return ret
 
+class SecurityAnalysis():
+	"""docstring for SecurityAnalysis"""
+
+	def as_of(self):
+		eastern = timezone('US/Eastern')
+		endDate = datetime.datetime.now(eastern)
+		
+		beforeMondayDayEnd = endDate.hour < 17 and endDate.weekday() == 0
+		if beforeMondayDayEnd:
+			endDate = datetime.datetime.today() - datetime.timedelta(days=1)
+
+		return endDate.strftime('%m-%d-%Y')
+
 	def get_current_price(self, securities):
 		eastern = timezone('US/Eastern')
 		endDate = datetime.datetime.now(eastern)
@@ -90,52 +119,7 @@ class Data():
 
 		end = pdr.get_data_yahoo(securities, start=endDate.strftime('%Y-%m-%d'), end=endEndDate.strftime('%Y-%m-%d'),  as_panel = False, auto_adjust=False)
 		ret = end['Adj Close'][0]
-		return round(ret, 2)
-
-
-	def get_daily_returns_df(self, prices):
-	    return ((prices / prices.shift(1) - 1).dropna())
-
-	def securities_year_to_date_return(self, securities, weights):
-		eastern = timezone('US/Eastern')
-		endDate = datetime.datetime.now(eastern)
-		
-		beforeMondayDayEnd = endDate.hour < 17 and endDate.weekday() == 0
-		if beforeMondayDayEnd:
-			endDate = datetime.datetime.today() - datetime.timedelta(days=1)
-
-		while(endDate.weekday() > 4 or endDate in holidays.US(years=endDate.year)):
-			endDate = endDate - datetime.timedelta(days=1)
-		endEndDate = endDate + datetime.timedelta(days=1)
-		
-		startDate = datetime.datetime(endDate.year - 1, 12, 31)
-		while(startDate.weekday() > 4 or startDate in holidays.US(years=startDate.year)):
-		  	startDate = startDate - datetime.timedelta(days=1)
-		startEndDate = startDate + datetime.timedelta(days=1)
-		
-		beg = pdr.get_data_yahoo(securities, start=startDate.strftime('%Y-%m-%d'), end=startEndDate.strftime('%Y-%m-%d'),  as_panel = False, auto_adjust=False)
-		end = pdr.get_data_yahoo(securities, start=endDate.strftime('%Y-%m-%d'), end=endEndDate.strftime('%Y-%m-%d'),  as_panel = False, auto_adjust=False)
-
-		allSecuritiesAllData = pd.concat([beg['Adj Close'], end['Adj Close']]).dropna()
-		
-		w = weights * self.get_daily_returns_df(allSecuritiesAllData)
-		if(isinstance(w, pd.DataFrame)):
-			w = w.sum(axis = 1, skipna = True)
-
-		ret = w[0]
-		return '{:.1%}'.format(ret)
-
-	def portfolio_year_to_date_return(self):
-		endDate = self.data.index[len(self.data) - 1]
-		while(endDate.weekday() > 4 or endDate in holidays.US(years=endDate.year)):
-			endDate = endDate - datetime.timedelta(days=1)
-
-		startDate = datetime.datetime(endDate.year - 1, 12, 31)
-		while(startDate.weekday() > 4 or startDate in holidays.US(years=startDate.year)):
-		  	startDate = startDate - datetime.timedelta(days=1)
-
-		ret = self.data.loc[endDate.strftime('%Y-%m-%d')][0] / self.data.loc[startDate.strftime('%Y-%m-%d')][0] - 1
-		return '{:.1%}'.format(ret)
+		return round(ret, 2)	
 
 	def security_total_return(self, securities, entry_price, entry_date, exit_price, exit_date):
 		if (entry_price is None) or (exit_price is None):
@@ -168,90 +152,35 @@ class Data():
 		
 		ret = (exit_price/entry_price - 1)
 		return '{:.1%}'.format(ret)
-		
 
-	def portfolio_one_year_return(self):
-		endDate = self.data.index[len(self.data) - 1]
-		startDate = endDate - relativedelta(years=1)
+	def _get_daily_returns_df(self, prices):
+	    return ((prices / prices.shift(1) - 1).dropna())
+
+	def securities_year_to_date_return(self, securities, weights):
+		eastern = timezone('US/Eastern')
+		endDate = datetime.datetime.now(eastern)
+		
+		beforeMondayDayEnd = endDate.hour < 17 and endDate.weekday() == 0
+		if beforeMondayDayEnd:
+			endDate = datetime.datetime.today() - datetime.timedelta(days=1)
+
+		while(endDate.weekday() > 4 or endDate in holidays.US(years=endDate.year)):
+			endDate = endDate - datetime.timedelta(days=1)
+		endEndDate = endDate + datetime.timedelta(days=1)
+		
+		startDate = datetime.datetime(endDate.year - 1, 12, 31)
 		while(startDate.weekday() > 4 or startDate in holidays.US(years=startDate.year)):
 		  	startDate = startDate - datetime.timedelta(days=1)
+		startEndDate = startDate + datetime.timedelta(days=1)
+		
+		beg = pdr.get_data_yahoo(securities, start=startDate.strftime('%Y-%m-%d'), end=startEndDate.strftime('%Y-%m-%d'),  as_panel = False, auto_adjust=False)
+		end = pdr.get_data_yahoo(securities, start=endDate.strftime('%Y-%m-%d'), end=endEndDate.strftime('%Y-%m-%d'),  as_panel = False, auto_adjust=False)
 
-		ret = self.data.loc[endDate.strftime('%Y-%m-%d')][0] / self.data.loc[startDate.strftime('%Y-%m-%d')][0] - 1
+		allSecuritiesAllData = pd.concat([beg['Adj Close'], end['Adj Close']]).dropna()
+		
+		w = weights * self._get_daily_returns_df(allSecuritiesAllData)
+		if(isinstance(w, pd.DataFrame)):
+			w = w.sum(axis = 1, skipna = True)
+
+		ret = w[0]
 		return '{:.1%}'.format(ret)
-
-
-	# Find RAR of a portfolio constructed from AIF's NAV
-	def one_year_risk_adjusted_return_from_NAV(self, threeFactor):
-		r = requests.get(self.zip_file_url, stream=True)
-		z = zipfile.ZipFile(BytesIO(r.content))
-		dailyFactorDF = pd.read_csv(z.open('F-F_Research_Data_5_Factors_2x3_daily.CSV'), skiprows=3)[-300:]
-		dailyFactorDF = dailyFactorDF.rename(columns={"Unnamed: 0": "Date"})
-
-		dailyFactorDF.index = [datetime.datetime.strptime(str(date_num), '%Y%m%d') for date_num in dailyFactorDF['Date'].tolist()]
-		dailyFactorDF = dailyFactorDF.drop(columns=['Date'])
-
-		last_index = dailyFactorDF.index[-1]
-		endDate = datetime.datetime(last_index.year, last_index.month, calendar.monthrange(last_index.year, last_index.month)[1])
-		startDate = last_index - relativedelta(years=1)
-		while(startDate.weekday() > 4 or startDate in holidays.US(years=startDate.year)):
-		  	startDate = startDate - datetime.timedelta(days=1)
-
-		dailyPortfolioReturns = self.get_daily_returns_df(self.data[startDate.strftime('%Y-%m-%d'):endDate.strftime('%Y-%m-%d')])
-		dailyPortfolioReturns = pd.DataFrame(dailyPortfolioReturns.values, columns=["Daily Portfolio Returns"], index=dailyPortfolioReturns.index) * 100
-		
-		dfjoin = dailyFactorDF.join(dailyPortfolioReturns).dropna()
-		portfolioExcessReturns = pd.DataFrame(dfjoin['Daily Portfolio Returns'].values - dfjoin['RF'].values, columns=['RP-RF'], index=dfjoin.index.values.flatten())
-		dfjoin = dfjoin.join(portfolioExcessReturns).drop(columns=['Daily Portfolio Returns', 'RF'])
-		
-		if threeFactor:
-			factors = dfjoin.columns.tolist()[0:3]
-		else:
-			factors = dfjoin.columns.tolist()[0:5]
-		
-		X = dfjoin[factors] 
-		X = sm.add_constant(X)
-		Y = dfjoin['RP-RF']
-
-		regression = sm.OLS(Y, X).fit()
-		ret = regression.params[0] * 365 / 100
-		return regression.summary2().tables[1].to_dict()
-		
-
-	# Find RAR of a portfolio constructed from individual stock info from Yahoo Finance
-	def one_year_risk_adjusted_return_from_securities(self, threeFactor, securities, weights):
-		r = requests.get(self.zip_file_url, stream=True)
-		z = zipfile.ZipFile(BytesIO(r.content))
-		dailydf = pd.read_csv(z.open('F-F_Research_Data_5_Factors_2x3_daily.CSV'), skiprows=3)[-300:]
-		dailydf = dailydf.rename(columns={"Unnamed: 0": "Date"})
-
-		dailydf.index = [datetime.datetime.strptime(str(date_num), '%Y%m%d') for date_num in dailydf['Date'].tolist()]
-		dailydf = dailydf.drop(columns=['Date'])
-
-		last_index = dailydf.index[-1]
-		endDate = datetime.datetime(last_index.year, last_index.month, calendar.monthrange(last_index.year, last_index.month)[1])
-		startDate = last_index - relativedelta(years=1)
-		allSecuritiesAllData = pdr.get_data_yahoo(securities, start=startDate.strftime('%Y-%m-%d'), end=endDate.strftime('%Y-%m-%d'),  as_panel = False, auto_adjust=False)
-		allSecuritiesAllData = allSecuritiesAllData['Adj Close'][1:]
-		w = weights * self.get_daily_returns_df(allSecuritiesAllData)
-		if isinstance(w, pd.DataFrame):
-			dailyPortfolioReturns = pd.DataFrame(w.sum(axis=1, skipna=True), columns=["Daily Portfolio Returns"])
-		else:
-			dailyPortfolioReturns = pd.DataFrame(w.values, columns=["Daily Portfolio Returns"], index=w.index)
-		dfjoin = dailydf.join(dailyPortfolioReturns).dropna()
-
-		portfolioExcessReturns = pd.DataFrame(dfjoin['Daily Portfolio Returns'].values - dfjoin['RF'].values, columns=['RP-RF'], index=dailyPortfolioReturns.index.values.flatten())
-		portfolioExcessReturns
-		dfjoin = dfjoin.join(portfolioExcessReturns).drop(columns=['Daily Portfolio Returns', 'RF'])
-
-		if threeFactor:
-			factors = dfjoin.columns.tolist()[0:3]
-		else:
-			factors = dfjoin.columns.tolist()[0:5]
-
-		X = dfjoin[factors] 
-		X = sm.add_constant(X)
-		Y = dfjoin['RP-RF']
-		 
-		regression = sm.OLS(Y, X).fit()
-		ret = regression.params[0] * 365 / 100
-		return regression.summary2().tables[1].to_dict()
